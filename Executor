@@ -123,7 +123,7 @@ scrollFrame.Position = UDim2.new(0, 5, 0, 5)
 scrollFrame.BackgroundTransparency = 1
 scrollFrame.BorderSizePixel = 0
 scrollFrame.ScrollBarThickness = 6
-scrollFrame.CanvasSize = UDim2.new(0, 0, 3, 0)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
 scrollFrame.Parent = hubFrame
 
 local function makeButton(name, yPos, code)
@@ -160,6 +160,20 @@ y = y + 45
 makeButton("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
 y = y + 45
 makeButton("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("ExSer", y, 'require(10868847330):pls("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Dex ServerSided", y, 'require(14572394952)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Happy Hub SS", y, 'require(133082646232945):Hload("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
+y = y + 45
+makeButton("Anti Ban", y, 'require(88808180999972)("'..LocalPlayer.Name..'")')
 
 execute.MouseButton1Click:Connect(function()
 	local scriptText = textBox.Text
@@ -201,6 +215,3 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
 		hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
 	end
 end)
-
---Made by Curse or Yaazkidd
---Free to skid if you find this
