@@ -1,0 +1,206 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "Curse"
+screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 400, 0, 260)
+mainFrame.Position = UDim2.new(0.5, -210, 0.5, -130)
+mainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = mainFrame
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
+}
+gradient.Rotation = 0
+gradient.Parent = mainFrame
+task.spawn(function()
+	while true do
+		for i = 0, 360, 1 do
+			gradient.Rotation = i
+			task.wait(0.04)
+		end
+	end
+end)
+
+local title = Instance.new("TextLabel")
+title.Text = "☯ CURSEDEW SERVERSIDE ☯"
+title.Size = UDim2.new(1, -60, 0, 40)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextScaled = true
+title.Font = Enum.Font.Fantasy
+title.Parent = mainFrame
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(255, 255, 255)
+stroke.Thickness = 0.5
+stroke.Parent = title
+
+local r6 = Instance.new("TextButton")
+r6.Size = UDim2.new(0, 50, 0, 30)
+r6.Position = UDim2.new(1, -55, 0, 5)
+r6.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+r6.Text = "R6"
+r6.Font = Enum.Font.Fantasy
+r6.TextSize = 14
+r6.TextColor3 = Color3.fromRGB(255, 255, 255)
+r6.Parent = mainFrame
+local r6Corner = Instance.new("UICorner")
+r6Corner.CornerRadius = UDim.new(0, 8)
+r6Corner.Parent = r6
+
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(1, -20, 0, 140)
+textBox.Position = UDim2.new(0, 10, 0, 50)
+textBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+textBox.ClearTextOnFocus = false
+textBox.MultiLine = true
+textBox.PlaceholderText = "Reason why i use"
+textBox.Text = "Use this shit idk"
+textBox.Font = Enum.Font.Code
+textBox.TextSize = 16
+textBox.TextXAlignment = Enum.TextXAlignment.Left
+textBox.TextYAlignment = Enum.TextYAlignment.Top
+textBox.Parent = mainFrame
+local textCorner = Instance.new("UICorner")
+textCorner.CornerRadius = UDim.new(0, 8)
+textCorner.Parent = textBox
+
+local execute = Instance.new("TextButton")
+execute.Size = UDim2.new(0.45, -10, 0, 40)
+execute.Position = UDim2.new(0.05, 0, 1, -45)
+execute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+execute.Text = "Execute"
+execute.Font = Enum.Font.Fantasy
+execute.TextSize = 18
+execute.TextColor3 = Color3.fromRGB(255, 255, 255)
+execute.Parent = mainFrame
+local execCorner = Instance.new("UICorner")
+execCorner.CornerRadius = UDim.new(0, 8)
+execCorner.Parent = execute
+
+local clear = Instance.new("TextButton")
+clear.Size = UDim2.new(0.45, -10, 0, 40)
+clear.Position = UDim2.new(0.5, 10, 1, -45)
+clear.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+clear.Text = "Clear"
+clear.Font = Enum.Font.Fantasy
+clear.TextSize = 18
+clear.TextColor3 = Color3.fromRGB(255, 255, 255)
+clear.Parent = mainFrame
+local clearCorner = Instance.new("UICorner")
+clearCorner.CornerRadius = UDim.new(0, 8)
+clearCorner.Parent = clear
+
+local hubFrame = Instance.new("Frame")
+hubFrame.Size = UDim2.new(0, 160, 0, 260)
+hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
+hubFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+hubFrame.BorderSizePixel = 0
+hubFrame.Parent = screenGui
+local hubCorner = Instance.new("UICorner")
+hubCorner.CornerRadius = UDim.new(0, 12)
+hubCorner.Parent = hubFrame
+local hubGrad = Instance.new("UIGradient")
+hubGrad.Color = gradient.Color
+hubGrad.Rotation = 180
+hubGrad.Parent = hubFrame
+
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, -10, 1, -10)
+scrollFrame.Position = UDim2.new(0, 5, 0, 5)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.BorderSizePixel = 0
+scrollFrame.ScrollBarThickness = 6
+scrollFrame.CanvasSize = UDim2.new(0, 0, 3, 0)
+scrollFrame.Parent = hubFrame
+
+local function makeButton(name, yPos, code)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1, -10, 0, 40)
+	btn.Position = UDim2.new(0, 5, 0, yPos)
+	btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	btn.Text = name
+	btn.Font = Enum.Font.Fantasy
+	btn.TextSize = 16
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.Parent = scrollFrame
+	local btnCorner = Instance.new("UICorner")
+	btnCorner.CornerRadius = UDim.new(0, 6)
+	btnCorner.Parent = btn
+	btn.MouseButton1Click:Connect(function()
+		ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer(code)
+	end)
+end
+
+local y = 5
+makeButton("CurseDew Gui", y, 'require(71255461878194).loading("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Polaria", y, 'require(123255432303221):Pload("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Server Admin", y, 'require(4665394711).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Nekotina", y, 'require(125615873892926)("'..LocalPlayer.Name..'","NekoV2")')
+y = y + 45
+makeButton("Lua Hammer", y, 'require(100389110145660).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
+y = y + 45
+makeButton("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.Name..'")')
+
+execute.MouseButton1Click:Connect(function()
+	local scriptText = textBox.Text
+	if scriptText ~= "" then
+		ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer(scriptText)
+	end
+end)
+
+clear.MouseButton1Click:Connect(function()
+	textBox.Text = ""
+end)
+
+r6.MouseButton1Click:Connect(function()
+	ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer('require(3436957371):r6("'..LocalPlayer.Name..'")')
+end)
+
+local dragging, dragInput, dragStart, startPos
+mainFrame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = mainFrame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+mainFrame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+		dragInput = input
+	end
+end)
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
+	end
+end)
+
+--Made by Curse or Yaazkidd
+--Free to skid if you find this
