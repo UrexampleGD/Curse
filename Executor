@@ -72,12 +72,12 @@ gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(0
 gradient.Rotation = 0
 gradient.Parent = mainFrame
 task.spawn(function()
-	while true do
-		for i = 0, 360, 1 do
-			gradient.Rotation = i
-			task.wait(0.04)
-		end
-	end
+ while true do
+  for i = 0, 360, 1 do
+   gradient.Rotation = i
+   task.wait(0.04)
+  end
+ end
 end)
 
 local title = Instance.new("TextLabel")
@@ -187,21 +187,21 @@ scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
 scrollFrame.Parent = hubFrame
 
 local function makeButton(name, yPos, code)
-	local btn = Instance.new("TextButton")
-	btn.Size = UDim2.new(1, -10, 0, 40)
-	btn.Position = UDim2.new(0, 5, 0, yPos)
-	btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-	btn.Text = name
-	btn.Font = Enum.Font.Fantasy
-	btn.TextSize = 16
-	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	btn.Parent = scrollFrame
-	local btnCorner = Instance.new("UICorner")
-	btnCorner.CornerRadius = UDim.new(0, 6)
-	btnCorner.Parent = btn
-	btn.MouseButton1Click:Connect(function()
-		sendCode(code)
-	end)
+ local btn = Instance.new("TextButton")
+ btn.Size = UDim2.new(1, -10, 0, 40)
+ btn.Position = UDim2.new(0, 5, 0, yPos)
+ btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ btn.Text = name
+ btn.Font = Enum.Font.Fantasy
+ btn.TextSize = 16
+ btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ btn.Parent = scrollFrame
+ local btnCorner = Instance.new("UICorner")
+ btnCorner.CornerRadius = UDim.new(0, 6)
+ btnCorner.Parent = btn
+ btn.MouseButton1Click:Connect(function()
+  sendCode(code)
+ end)
 end
 
 local y = 5
@@ -234,54 +234,82 @@ y = y + 45
 makeButton("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
 y = y + 45
 makeButton("Anti Ban", y, 'require(88808180999972)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("AntiSkid V14", y, 'require(16534611190).AntiSkid()')
+y = y + 45
+makeButton("Sensation Hub", y, 'require(100263845596551)("'..LocalPlayer.Name..'", ColorSequence.new(Color3.fromRGB(71, 148, 253), Color3.fromRGB(71, 253, 160)), "Standard")')
+y = y + 45
+makeButton("Omg c00lkidd from forsaken", y, 'require(89709417365094).Forsaken("'..LocalPlayer.Name..'", "c00lkidd")')
+y = y + 45
+makeButton("FLOWER.", y, 'require(80240554708712).Forsaken("'..LocalPlayer.Name..'", "פרחים")')
+y = y + 45
+makeButton("Flamethrower (item)", y, 'require(4666114735).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Krystal Dance V2", y, 'require(8485456006).kdancev2("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Guest 1337 forsaken", y, 'require(81657562726106).Guest1337("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Grab knife v4", y, 'require(92380739586493)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("MLG Gun", y, 'require(2850994438).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
 
 executeBtn.MouseButton1Click:Connect(function()
-	local scriptText = textBox.Text
-	if scriptText ~= "" then
-		sendCode(scriptText)
-	end
+ local scriptText = textBox.Text
+ if scriptText ~= "" then
+  sendCode(scriptText)
+ end
 end)
 
 clear.MouseButton1Click:Connect(function()
-	textBox.Text = ""
+ textBox.Text = ""
 end)
 
 inject.MouseButton1Click:Connect(function()
-	local scriptText = textBox.Text
-	if scriptText ~= "" then
-		local success = sendCode(scriptText)
-		if success then
-			inject.Text = "Injected"
-		end
-	end
+ local scriptText = textBox.Text
+ if scriptText ~= "" then
+  local success = sendCode(scriptText)
+  if success then
+   inject.Text = "Injected"
+  end
+ end
 end)
 
 r6.MouseButton1Click:Connect(function()
-	sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
+ sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
 end)
 
 local dragging, dragInput, dragStart, startPos
 mainFrame.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-		dragging = true
-		dragStart = input.Position
-		startPos = mainFrame.Position
-		input.Changed:Connect(function()
-			if input.UserInputState == Enum.UserInputState.End then
-				dragging = false
-			end
-		end)
-	end
+ if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+  dragging = true
+  dragStart = input.Position
+  startPos = mainFrame.Position
+  input.Changed:Connect(function()
+   if input.UserInputState == Enum.UserInputState.End then
+    dragging = false
+   end
+  end)
+ end
 end)
 mainFrame.InputChanged:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-		dragInput = input
-	end
+ if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+  dragInput = input
+ end
 end)
 game:GetService("UserInputService").InputChanged:Connect(function(input)
-	if input == dragInput and dragging then
-		local delta = input.Position - dragStart
-		mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-		hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
-	end
+ if input == dragInput and dragging then
+  local delta = input.Position - dragStart
+  mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+  hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
+ end
 end)
+
+--Made By Yaazkidd
+--Found = can skid
+--Code by Curse (Yaazkidd lmao why do I need to!!)
+--My Dizcord: teamdbq
+
+print("CurseDew Executor Initialized. Fuck it eh.")
+warn("Testing warn")
