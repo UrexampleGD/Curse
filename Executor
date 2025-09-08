@@ -254,6 +254,8 @@ y = y + 45
 makeButton("MLG Gun", y, 'require(2850994438).load("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
 
 executeBtn.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
@@ -306,10 +308,5 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  end
 end)
 
---Made By Yaazkidd
---Found = can skid
---Code by Curse (Yaazkidd lmao why do I need to!!)
---My Dizcord: teamdbq
 
-print("CurseDew Executor Initialized. Fuck it eh.")
-warn("Testing warn")
+--Made By Yaazkidd --Found = can skid --Code by Curse (Yaazkidd lmao why do I need to!!) --My Dizcord: teamdbq print("CurseDew Executor Initialized. Fuck it eh.") warn("Testing warn")
