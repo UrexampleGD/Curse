@@ -186,6 +186,8 @@ scrollFrame.ScrollBarThickness = 6
 scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
 scrollFrame.Parent = hubFrame
 
+local injected = false
+
 local function makeButton(name, yPos, code)
  local btn = Instance.new("TextButton")
  btn.Size = UDim2.new(1, -10, 0, 40)
@@ -200,7 +202,9 @@ local function makeButton(name, yPos, code)
  btnCorner.CornerRadius = UDim.new(0, 6)
  btnCorner.Parent = btn
  btn.MouseButton1Click:Connect(function()
-  sendCode(code)
+  if injected then
+   sendCode(code)
+  end
  end)
 end
 
@@ -259,7 +263,7 @@ makeButton("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'
 
 executeBtn.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
- if scriptText ~= "" then
+ if injected and scriptText ~= "" then
   sendCode(scriptText)
  end
 end)
@@ -269,17 +273,17 @@ clear.MouseButton1Click:Connect(function()
 end)
 
 inject.MouseButton1Click:Connect(function()
- local scriptText = textBox.Text
- if scriptText ~= "" then
-  local success = sendCode(scriptText)
-  if success then
-   inject.Text = "Injected"
-  end
+ local remote = findBackdoor()
+ if remote then
+  injected = true
+  inject.Text = "Injected"
  end
 end)
 
 r6.MouseButton1Click:Connect(function()
- sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
+ if injected then
+  sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
+ end
 end)
 
 local dragging, dragInput, dragStart, startPos
@@ -308,5 +312,11 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  end
 end)
 
+print("CurseDew Executor Initialized.")
+warn("Testing warn")
 
---Made By Yaazkidd --Found = can skid --Code by Curse (Yaazkidd lmao why do I need to!!) --My Dizcord: teamdbq print("CurseDew Executor Initialized. Fuck it eh.") warn("Testing warn")
+
+--Made By Yaazkidd
+--Found = can skid
+--Code by Curse (Yaazkidd lmao why do I need to!!)
+--My Dizcord: teamdbq
