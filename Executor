@@ -124,18 +124,18 @@ local textCorner = Instance.new("UICorner")
 textCorner.CornerRadius = UDim.new(0, 8)
 textCorner.Parent = textBox
 
-local executeBtn = Instance.new("TextButton")
-executeBtn.Size = UDim2.new(0.3, -6, 0, 40)
-executeBtn.Position = UDim2.new(0.05, 0, 1, -60)
-executeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-executeBtn.Text = "Execute"
-executeBtn.Font = Enum.Font.Fantasy
-executeBtn.TextSize = 18
-executeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-executeBtn.Parent = Frame
+local execute = Instance.new("TextButton")
+execute.Size = UDim2.new(0.3, -6, 0, 40)
+execute.Position = UDim2.new(0.05, 0, 1, -60)
+execute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+execute.Text = "Execute"
+execute.Font = Enum.Font.Fantasy
+execute.TextSize = 18
+execute.TextColor3 = Color3.fromRGB(255, 255, 255)
+execute.Parent = Frame
 local execCorner = Instance.new("UICorner")
 execCorner.CornerRadius = UDim.new(0, 8)
-execCorner.Parent = executeBtn
+execCorner.Parent = execute
 
 local clear = Instance.new("TextButton")
 clear.Size = UDim2.new(0.3, -6, 0, 40)
@@ -261,7 +261,7 @@ makeButton("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
 
-executeBtn.MouseButton1Click:Connect(function()
+execute.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
  if injected and scriptText ~= "" then
   sendCode(scriptText)
