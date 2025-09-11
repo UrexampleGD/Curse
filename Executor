@@ -165,7 +165,7 @@ injectCorner.Parent = inject
 
 local hubFrame = Instance.new("Frame")
 hubFrame.Size = UDim2.new(0, 160, 0, 260)
-hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
+hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 5, 0, Frame.AbsolutePosition.Y)
 hubFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 hubFrame.BorderSizePixel = 0
 hubFrame.Parent = screenGui
