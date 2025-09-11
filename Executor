@@ -57,20 +57,20 @@ screenGui.Name = "Curse"
 screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 screenGui.ResetOnSpawn = false
 
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 400, 0, 260)
-mainFrame.Position = UDim2.new(0.5, -210, 0.5, -130)
-mainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-mainFrame.BorderSizePixel = 0
-mainFrame.Parent = screenGui
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 400, 0, 260)
+Frame.Position = UDim2.new(0.5, -210, 0.5, -130)
+Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Frame.BorderSizePixel = 0
+Frame.Parent = screenGui
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = mainFrame
+corner.Parent = Frame
 
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),ColorSequenceKeypoint.new(1, Color3.fromRGB(255,255,255))}
 gradient.Rotation = 0
-gradient.Parent = mainFrame
+gradient.Parent = Frame
 task.spawn(function()
  while true do
   for i = 0, 360, 1 do
@@ -87,7 +87,7 @@ title.BackgroundTransparency = 1
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextScaled = true
 title.Font = Enum.Font.Fantasy
-title.Parent = mainFrame
+title.Parent = Frame
 local stroke = Instance.new("UIStroke")
 stroke.Color = Color3.fromRGB(255, 255, 255)
 stroke.Thickness = 0.5
@@ -101,7 +101,7 @@ r6.Text = "R6"
 r6.Font = Enum.Font.Fantasy
 r6.TextSize = 14
 r6.TextColor3 = Color3.fromRGB(255, 255, 255)
-r6.Parent = mainFrame
+r6.Parent = Frame
 local r6Corner = Instance.new("UICorner")
 r6Corner.CornerRadius = UDim.new(0, 8)
 r6Corner.Parent = r6
@@ -119,7 +119,7 @@ textBox.Font = Enum.Font.Code
 textBox.TextSize = 16
 textBox.TextXAlignment = Enum.TextXAlignment.Left
 textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.Parent = mainFrame
+textBox.Parent = Frame
 local textCorner = Instance.new("UICorner")
 textCorner.CornerRadius = UDim.new(0, 8)
 textCorner.Parent = textBox
@@ -132,7 +132,7 @@ executeBtn.Text = "Execute"
 executeBtn.Font = Enum.Font.Fantasy
 executeBtn.TextSize = 18
 executeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-executeBtn.Parent = mainFrame
+executeBtn.Parent = Frame
 local execCorner = Instance.new("UICorner")
 execCorner.CornerRadius = UDim.new(0, 8)
 execCorner.Parent = executeBtn
@@ -145,7 +145,7 @@ clear.Text = "Clear"
 clear.Font = Enum.Font.Fantasy
 clear.TextSize = 18
 clear.TextColor3 = Color3.fromRGB(255, 255, 255)
-clear.Parent = mainFrame
+clear.Parent = Frame
 local clearCorner = Instance.new("UICorner")
 clearCorner.CornerRadius = UDim.new(0, 8)
 clearCorner.Parent = clear
@@ -158,7 +158,7 @@ inject.Text = "Inject"
 inject.Font = Enum.Font.Fantasy
 inject.TextSize = 18
 inject.TextColor3 = Color3.fromRGB(255, 255, 255)
-inject.Parent = mainFrame
+inject.Parent = Frame
 local injectCorner = Instance.new("UICorner")
 injectCorner.CornerRadius = UDim.new(0, 8)
 injectCorner.Parent = inject
@@ -287,11 +287,11 @@ r6.MouseButton1Click:Connect(function()
 end)
 
 local dragging, dragInput, dragStart, startPos
-mainFrame.InputBegan:Connect(function(input)
+Frame.InputBegan:Connect(function(input)
  if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
   dragging = true
   dragStart = input.Position
-  startPos = mainFrame.Position
+  startPos = Frame.Position
   input.Changed:Connect(function()
    if input.UserInputState == Enum.UserInputState.End then
     dragging = false
@@ -299,7 +299,7 @@ mainFrame.InputBegan:Connect(function(input)
   end)
  end
 end)
-mainFrame.InputChanged:Connect(function(input)
+Frame.InputChanged:Connect(function(input)
  if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
   dragInput = input
  end
@@ -307,8 +307,8 @@ end)
 game:GetService("UserInputService").InputChanged:Connect(function(input)
  if input == dragInput and dragging then
   local delta = input.Position - dragStart
-  mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-  hubFrame.Position = UDim2.new(0, mainFrame.AbsolutePosition.X + mainFrame.Size.X.Offset + 5, 0, mainFrame.AbsolutePosition.Y)
+  Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+  hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 5, 0, Frame.AbsolutePosition.Y)
  end
 end)
 
