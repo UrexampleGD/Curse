@@ -209,7 +209,7 @@ local function makeButton(name, yPos, code)
 end
 
 local y = 5
-makeButton("CurseDew Gui", y, 'require(71255461878194).loading("'..LocalPlayer.Name..'")')
+makeButton("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Polaria", y, 'require(123255432303221):Pload("'..LocalPlayer.Name..'")')
 y = y + 45
