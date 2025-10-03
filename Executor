@@ -282,7 +282,7 @@ end)
 
 r6.MouseButton1Click:Connect(function()
  if injected then
-  sendCode('require(3436957371):r6("'..LocalPlayer.Name..'")')
+  sendCode('require(9635947635).load("'..LocalPlayer.Name..'")')
  end
 end)
 
