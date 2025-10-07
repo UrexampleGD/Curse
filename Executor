@@ -283,10 +283,8 @@ inject.MouseButton1Click:Connect(function()
  if foundRemote then
   injected = true
   inject.Text = "Injected"
-  inject.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
  else
-  inject.Text = "Failed"
-  inject.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
+  inject.Text = "Inject"
  end
 end)
 
