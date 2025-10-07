@@ -311,14 +311,16 @@ Frame.InputBegan:Connect(function(input)
    if input.UserInputState == Enum.UserInputState.End then
     dragging = false
    end
-  end
+  end)
  end
 end)
+
 Frame.InputChanged:Connect(function(input)
  if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
   dragInput = input
  end
 end)
+
 game:GetService("UserInputService").InputChanged:Connect(function(input)
  if input == dragInput and dragging then
   local delta = input.Position - dragStart
