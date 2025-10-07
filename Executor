@@ -223,7 +223,7 @@ end
 local y = 5
 makeButton("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Polaria", y, 'require(123255432303221):Pload("'..LocalPlayer.Name..'")')
+makeButton("Polaria", y, 'require(75929794015232):Pload("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name..'")')
 y = y + 45
