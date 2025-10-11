@@ -456,6 +456,81 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  end
 end)
 
+local squareGuiVisible = false
+local squareFrame, squareOutline, squareDrag, squareDragInput, squareDragStart, squareStartPos
+
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Size = UDim2.new(0, 60, 0, 30)
+toggleBtn.Position = UDim2.new(1, -120, 0, 5)
+toggleBtn.BackgroundColor3 = Color3.fromRGB(30,30,30)
+toggleBtn.Text = "shit"
+toggleBtn.Font = Enum.Font.Fantasy
+toggleBtn.TextSize = 16
+toggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+toggleBtn.Parent = Frame
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0,8)
+toggleCorner.Parent = toggleBtn
+
+local function createSquare()
+    if squareFrame and squareFrame.Parent then return end
+    squareFrame = Instance.new("Frame")
+    squareFrame.Size = UDim2.new(0, 180, 0, 180)
+    squareFrame.Position = UDim2.new(0.5, -90, 0.5, -90)
+    squareFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+    squareFrame.BorderSizePixel = 0
+    squareFrame.Parent = screenGui
+    local sqCorner = Instance.new("UICorner")
+    sqCorner.CornerRadius = UDim.new(0, 18)
+    sqCorner.Parent = squareFrame
+    local img = Instance.new("ImageLabel")
+    img.Size = UDim2.new(1, -8, 1, -8)
+    img.Position = UDim2.new(0,4,0,4)
+    img.BackgroundTransparency = 1
+    img.Image = "rbxassetid://73667899210726"
+    img.ScaleType = Enum.ScaleType.Crop
+    img.Parent = squareFrame
+    squareOutline = createMovingOutline(squareFrame)
+    squareFrame.Active = true
+    squareFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            squareDrag = true
+            squareDragStart = input.Position
+            squareStartPos = squareFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    squareDrag = false
+                end
+            end)
+        end
+    end)
+    squareFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            squareDragInput = input
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == squareDragInput and squareDrag then
+            local delta = input.Position - squareDragStart
+            squareFrame.Position = UDim2.new(squareStartPos.X.Scale, squareStartPos.X.Offset + delta.X, squareStartPos.Y.Scale, squareStartPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+
+toggleBtn.MouseButton1Click:Connect(function()
+    if not squareGuiVisible then
+        createSquare()
+        squareGuiVisible = true
+        if squareFrame then squareFrame.Visible = true end
+    else
+        squareGuiVisible = false
+        if squareFrame then squareFrame:Destroy() end
+        if squareOutline then squareOutline:Destroy() end
+        squareFrame = nil
+        squareOutline = nil
+    end
+end)
+
 print("CurseDew Executor Initialized.")
 warn("Testing warn")
 
