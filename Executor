@@ -10,7 +10,6 @@ local injected = false
 local function scanForBackdoors()
     local foundRemotes = {}
     local markerId = "Marker_" .. tostring(math.random(100000,999999))
-    
     for _, obj in pairs(game:GetDescendants()) do
         if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
             if obj.Parent == game:GetService("ReplicatedStorage") then
@@ -23,9 +22,7 @@ local function scanForBackdoors()
                 if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
                     continue
                 end
-                
                 local testCommand = "print('It worked! Wow.')"
-                
                 if obj:IsA("RemoteEvent") then
                     obj:FireServer(testCommand)
                 else
@@ -33,18 +30,14 @@ local function scanForBackdoors()
                         pcall(function() obj:InvokeServer(testCommand) end)
                     end)
                 end
-                
                 table.insert(foundRemotes, obj)
             end
         end
     end
-    
     wait(1)
-    
     for _, remote in pairs(foundRemotes) do
         return remote
     end
-    
     return nil
 end
 
@@ -185,7 +178,6 @@ injectCorner.Parent = inject
 
 local hubFrame = Instance.new("Frame")
 hubFrame.Size = UDim2.new(0, 160, 0, 260)
-hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 10, 0, Frame.AbsolutePosition.Y)
 hubFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 hubFrame.BorderSizePixel = 0
 hubFrame.Parent = screenGui
@@ -196,6 +188,16 @@ local hubGrad = Instance.new("UIGradient")
 hubGrad.Color = gradient.Color
 hubGrad.Rotation = 180
 hubGrad.Parent = hubFrame
+
+local function alignHub()
+    if Frame and hubFrame and Frame.Parent then
+        pcall(function()
+            hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.AbsoluteSize.X + 10, 0, Frame.AbsolutePosition.Y)
+        end)
+    end
+end
+
+alignHub()
 
 local function createMovingOutline(target)
     local out = Instance.new("Frame")
@@ -397,6 +399,7 @@ y = y + 45
 makeButton("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Serverside.fun", y, 'require(91127800424822).SF("'..LocalPlayer.Name..'")')
+y = y + 45
 
 hubExecute.MouseButton1Click:Connect(function()
  if injected and currentCode ~= "" then
@@ -456,7 +459,7 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  if input == dragInput and dragging then
   local delta = input.Position - dragStart
   Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-  hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.Size.X.Offset + 5, 0, Frame.AbsolutePosition.Y)
+  alignHub()
  end
 end)
 
@@ -480,6 +483,9 @@ toggleButton.MouseButton1Click:Connect(function()
  hubFrame.Visible = not shit
  outline1.Visible = not shit
  outline2.Visible = not shit
+ if not shit then
+  alignHub()
+ end
 end)
 
 print("CurseDew Executor Initialized.")
