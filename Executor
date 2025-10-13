@@ -7,6 +7,8 @@ local LocalPlayer = Players.LocalPlayer
 local foundRemote = nil
 local injected = false
 
+
+--this inject code took me 3 days to finish lmao
 local function scanForBackdoors()
     local foundRemotes = {}
     local markerId = "Marker_" .. tostring(math.random(100000,999999))
@@ -22,7 +24,7 @@ local function scanForBackdoors()
                 if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
                     continue
                 end
-                local testCommand = "print('It worked! Wow.')"
+                local testCommand = "print('It worked! Wow.')" --test command, it will fire server when worked
                 if obj:IsA("RemoteEvent") then
                     obj:FireServer(testCommand)
                 else
@@ -41,6 +43,8 @@ local function scanForBackdoors()
     return nil
 end
 
+
+--send code part is where you send the fire event
 local function sendCode(code)
     if foundRemote and typeof(foundRemote) == "Instance" then
         local success, errorMsg = pcall(function()
@@ -56,6 +60,7 @@ local function sendCode(code)
     end
 end
 
+--dont know how to explain
 local function getPlayerFromName(name)
     for _, player in pairs(Players:GetPlayers()) do
         if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
@@ -247,13 +252,13 @@ scrollFrame.Position = UDim2.new(0, 5, 0, 5)
 scrollFrame.BackgroundTransparency = 1
 scrollFrame.BorderSizePixel = 0
 scrollFrame.ScrollBarThickness = 6
-scrollFrame.CanvasSize = UDim2.new(0, 0, 6, 0)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 8, 0)
 scrollFrame.Parent = hubFrame
 
 local targetLabel = Instance.new("TextLabel")
 targetLabel.Text = "All, Player name, me"
 targetLabel.Size = UDim2.new(1, -10, 0, 20)
-targetLabel.Position = UDim2.new(0, 5, 0, 1320)
+targetLabel.Position = UDim2.new(0, 5, 0, 1620)
 targetLabel.BackgroundTransparency = 1
 targetLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 targetLabel.TextSize = 14
@@ -263,7 +268,7 @@ targetLabel.Parent = scrollFrame
 
 local targetBox = Instance.new("TextBox")
 targetBox.Size = UDim2.new(1, -10, 0, 30)
-targetBox.Position = UDim2.new(0, 5, 0, 1345)
+targetBox.Position = UDim2.new(0, 5, 0, 1645)
 targetBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 targetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 targetBox.ClearTextOnFocus = false
@@ -278,7 +283,7 @@ targetCorner.Parent = targetBox
 
 local hubExecute = Instance.new("TextButton")
 hubExecute.Size = UDim2.new(1, -10, 0, 40)
-hubExecute.Position = UDim2.new(0, 5, 0, 1385)
+hubExecute.Position = UDim2.new(0, 5, 0, 1685)
 hubExecute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 hubExecute.Text = "Execute"
 hubExecute.Font = Enum.Font.Fantasy
@@ -400,6 +405,18 @@ makeButton("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name.
 y = y + 45
 makeButton("Serverside.fun", y, 'require(91127800424822).SF("'..LocalPlayer.Name..'")')
 y = y + 45
+makeButton("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Name..'", "sorcerer")')
+y = y + 45
+makeButton("Sukuna Momichi", y, 'require(89529616632600)("'..LocalPlayer.Name..'", "Sukuna")')
+y = y + 45
+makeButton("Bipolaroid", y, 'require(88477009909590):Pload("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Chat Hack", y, 'require(79249949309162)("'..LocalPlayer.Name..'")')
+y = y + 45
+makeButton("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
+y = y + 45
+makeButton("Compact Hub", y, 'require(15502618907)("'..LocalPlayer.Name..'")')
+y = y + 45
 
 hubExecute.MouseButton1Click:Connect(function()
  if injected and currentCode ~= "" then
@@ -418,6 +435,7 @@ clear.MouseButton1Click:Connect(function()
  textBox.Text = ""
 end)
 
+--took me a while
 inject.MouseButton1Click:Connect(function()
  if not injected then
   foundRemote = scanForBackdoors()
@@ -463,6 +481,7 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  end
 end)
 
+--shitty toggle but yh
 local shit = false
 local toggleButton = Instance.new("ImageButton")
 toggleButton.Size = UDim2.new(0, 50, 0, 50)
