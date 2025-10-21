@@ -417,7 +417,7 @@ makeButton("Artic | Pload Remake", y, 'require(100862513257291):Fire("'..LocalPl
 y = y + 45
 makeButton("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Serverside.fun", y, 'require(91127800424822).SF("'..LocalPlayer.Name..'")')
+makeButton("Serverside.fun", y, 'require(132592022786319).SFV3PC("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Name..'", "sorcerer")')
 y = y + 45
