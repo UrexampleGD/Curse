@@ -379,7 +379,7 @@ makeButton("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.
 y = y + 45
 makeButton("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("ExSer", y, 'require(10868847330):pls("'..LocalPlayer.Name..'")')
+makeButton("ExSer", y, 'require(102321495237505):pls("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.Name..'")')
 y = y + 45
