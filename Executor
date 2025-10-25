@@ -13,6 +13,7 @@ local LocalPlayer = Players.LocalPlayer
 local foundRemote = nil
 local injected = false
 
+--Feima talk alot about this topic too many times and thanks
 local function scanForBackdoors()
     local foundRemotes = {}
     local markerId = "Marker_" .. tostring(math.random(100000,999999))
@@ -47,6 +48,7 @@ local function scanForBackdoors()
     return nil
 end
 
+--Fake did this part
 local function prepareCode(code)
     if type(code) ~= "string" then
         code = tostring(code)
@@ -58,6 +60,7 @@ local function prepareCode(code)
     return 'loadstring([==['..code..']==])()'
 end
 
+--Fake did this part
 local function sendCode(code)
     code = prepareCode(code)
     if foundRemote and typeof(foundRemote) == "Instance" then
@@ -74,6 +77,7 @@ local function sendCode(code)
     end
 end
 
+--Kenzie thanks!!
 local function getPlayerFromName(name)
     for _, player in pairs(Players:GetPlayers()) do
         if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
@@ -208,6 +212,7 @@ hubGrad.Color = gradient.Color
 hubGrad.Rotation = 180
 hubGrad.Parent = hubFrame
 
+--ChatGPT did this cuz when closed and opened again, the hub frame is close to the executor lol
 local function alignHub()
     if Frame and hubFrame and Frame.Parent then
         pcall(function()
@@ -218,6 +223,7 @@ end
 
 alignHub()
 
+--even tho my brother helped me making this, he is still annoying
 local function createMovingOutline(target)
     local out = Instance.new("Frame")
     out.BackgroundTransparency = 0
@@ -438,6 +444,7 @@ hubExecute.MouseButton1Click:Connect(function()
  end
 end)
 
+--I love this part
 execute.MouseButton1Click:Connect(function()
  local scriptText = textBox.Text
  if injected and scriptText ~= "" then
