@@ -8,6 +8,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 
 local foundRemote = nil
@@ -525,6 +526,67 @@ toggleButton.MouseButton1Click:Connect(function()
   alignHub()
  end
 end)
+
+-- Welcome notification
+task.wait(1)
+local notification = Instance.new("Frame")
+notification.Size = UDim2.new(0, 400, 0, 100)
+notification.Position = UDim2.new(1, 10, 0.1, 0)
+notification.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+notification.BorderSizePixel = 2
+notification.BorderColor3 = Color3.fromRGB(255, 255, 255)
+notification.Parent = screenGui
+
+local notifCorner = Instance.new("UICorner")
+notifCorner.CornerRadius = UDim.new(0, 12)
+notifCorner.Parent = notification
+
+local notifGradient = Instance.new("UIGradient")
+notifGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 30, 30))
+}
+notifGradient.Parent = notification
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(0.7, 0, 0, 35)
+title.Position = UDim2.new(0, 15, 0, 10)
+title.BackgroundTransparency = 1
+title.Text = "CurseDew Serverside"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextSize = 20
+title.Font = Enum.Font.GothamBold
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = notification
+
+local desc = Instance.new("TextLabel")
+desc.Size = UDim2.new(0.7, 0, 0, 45)
+desc.Position = UDim2.new(0, 15, 0, 45)
+desc.BackgroundTransparency = 1
+desc.Text = "Thank you for using my serverside!!!"
+desc.TextColor3 = Color3.fromRGB(200, 200, 200)
+desc.TextSize = 14
+desc.Font = Enum.Font.Gotham
+desc.TextXAlignment = Enum.TextXAlignment.Left
+desc.Parent = notification
+
+local emoji = Instance.new("ImageLabel")
+emoji.Size = UDim2.new(0, 60, 0, 60)
+emoji.Position = UDim2.new(1, -70, 0.5, -30)
+emoji.BackgroundTransparency = 1
+emoji.Image = "rbxassetid://73481929017552"
+emoji.Parent = notification
+
+local slideIn = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
+slideIn:Play()
+
+task.wait(5)
+
+local slideOut = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0.1, 0)})
+slideOut:Play()
+
+task.wait(0.7)
+notification:Destroy()
 
 print("CurseDew Executor Initialized.")
 warn("Testing warn")
