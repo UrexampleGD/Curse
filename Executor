@@ -392,7 +392,7 @@ makeButton("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.Name..'"
 y = y + 45
 makeButton("Dex ServerSided", y, 'require(14572394952)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Happy Hub SS", y, 'require(78790302691160):Hload("'..LocalPlayer.Name..'")')
+makeButton("Happy Hub SS", y, 'require(111482740932254):Hload("'..LocalPlayer.Name..'")')
 y = y + 45
 makeButton("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
 y = y + 45
