@@ -1,5 +1,5 @@
---ChatGPT Renamed everything and I'm to lazy to fix it
---Injection took 3 days to finish (That was made by Feima)
+--I renamed everything cuz ppl keep calling ts chatgpt when chatgpt renamed everything so ok
+--New injection takes 6 days to finish (that was made by Feima(
 --Made by Yaazkidd (Or CurseDew)
 
 print("Parliament haxcked")
@@ -12,11 +12,11 @@ local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 
-local foundRemote = nil
+local remotefounded = nil
 local injected = false
 
 --Feima here, so um I did update this part and added some comment because memory ok
-local function scanForBackdoors()
+local function scan()
     ---scan only remotes in RS and verify execute to create mark
     for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
         if not (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) then
@@ -94,7 +94,7 @@ end)]]):format(markerId, markerId)
 end
 
 --Fake did this part
-local function prepareCode(code)
+local function prepare(code)
     if type(code) ~= "string" then
         code = tostring(code)
     end
@@ -106,14 +106,14 @@ local function prepareCode(code)
 end
 
 --Fake did this part
-local function sendCode(code)
-    code = prepareCode(code)
-    if foundRemote and typeof(foundRemote) == "Instance" then
+local function sender(code)
+    code = prepare(code)
+    if remotefounded and typeof(remotefounded) == "Instance" then
         local success, errorMsg = pcall(function()
-            if foundRemote:IsA("RemoteEvent") then
-                foundRemote:FireServer(code)
-            elseif foundRemote:IsA("RemoteFunction") then
-                foundRemote:InvokeServer(code)
+            if remotefounded:IsA("RemoteEvent") then
+                remotefounded:FireServer(code)
+            elseif remotefounded:IsA("RemoteFunction") then
+                remotefounded:InvokeServer(code)
             end
         end)
         return success
@@ -123,7 +123,7 @@ local function sendCode(code)
 end
 
 --Kenzie thanks!!
-local function getPlayerFromName(name)
+local function getplr(name)
     for _, player in pairs(Players:GetPlayers()) do
         if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
             return player
@@ -182,28 +182,28 @@ r6.Font = Enum.Font.Fantasy
 r6.TextSize = 14
 r6.TextColor3 = Color3.fromRGB(255, 255, 255)
 r6.Parent = Frame
-local r6Corner = Instance.new("UICorner")
-r6Corner.CornerRadius = UDim.new(0, 8)
-r6Corner.Parent = r6
+local corner6 = Instance.new("UICorner")
+corner6.CornerRadius = UDim.new(0, 8)
+corner6.Parent = r6
 
-local textBox = Instance.new("TextBox")
-textBox.Size = UDim2.new(1, -20, 0, 140)
-textBox.Position = UDim2.new(0, 10, 0, 40)
-textBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-textBox.ClearTextOnFocus = false
-textBox.MultiLine = true
-textBox.TextWrapped = true
-textBox.PlaceholderText = "Reason why i use"
-textBox.Text = "Use this shit idk"
-textBox.Font = Enum.Font.Code
-textBox.TextSize = 16
-textBox.TextXAlignment = Enum.TextXAlignment.Left
-textBox.TextYAlignment = Enum.TextYAlignment.Top
-textBox.Parent = Frame
+local TextBox = Instance.new("TextBox")
+TextBox.Size = UDim2.new(1, -20, 0, 140)
+TextBox.Position = UDim2.new(0, 10, 0, 40)
+TextBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.ClearTextOnFocus = false
+TextBox.MultiLine = true
+TextBox.TextWrapped = true
+TextBox.PlaceholderText = "Reason why i use"
+TextBox.Text = "Use this shit idk"
+TextBox.Font = Enum.Font.Code
+TextBox.TextSize = 16
+TextBox.TextXAlignment = Enum.TextXAlignment.Left
+TextBox.TextYAlignment = Enum.TextYAlignment.Top
+TextBox.Parent = Frame
 local textCorner = Instance.new("UICorner")
 textCorner.CornerRadius = UDim.new(0, 8)
-textCorner.Parent = textBox
+textCorner.Parent = TextBox
 
 local execute = Instance.new("TextButton")
 execute.Size = UDim2.new(0.3, -6, 0, 40)
@@ -244,40 +244,40 @@ local injectCorner = Instance.new("UICorner")
 injectCorner.CornerRadius = UDim.new(0, 8)
 injectCorner.Parent = inject
 
-local hubFrame = Instance.new("Frame")
-hubFrame.Size = UDim2.new(0, 160, 0, 260)
-hubFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
-hubFrame.BorderSizePixel = 0
-hubFrame.Parent = screenGui
-local hubCorner = Instance.new("UICorner")
-hubCorner.CornerRadius = UDim.new(0, 12)
-hubCorner.Parent = hubFrame
+local hub = Instance.new("Frame")
+hub.Size = UDim2.new(0, 160, 0, 260)
+hub.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+hub.BorderSizePixel = 0
+hub.Parent = screenGui
+local hbcr = Instance.new("UICorner")
+hbcr.CornerRadius = UDim.new(0, 12)
+hbcr.Parent = hub
 local hubGrad = Instance.new("UIGradient")
 hubGrad.Color = gradient.Color
 hubGrad.Rotation = 180
-hubGrad.Parent = hubFrame
+hubGrad.Parent = hub
 
 --ChatGPT did this cuz when closed and opened again, the hub frame is close to the executor lol
-local function alignHub()
-    if Frame and hubFrame and Frame.Parent then
+local function align()
+    if Frame and hub and Frame.Parent then
         pcall(function()
-            hubFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.AbsoluteSize.X + 10, 0, Frame.AbsolutePosition.Y)
+            hub.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.AbsoluteSize.X + 10, 0, Frame.AbsolutePosition.Y)
         end)
     end
 end
 
-alignHub()
+align()
 
 --even tho my brother helped me making this, he is still annoying
-local function createMovingOutline(target)
-    local out = Instance.new("Frame")
-    out.BackgroundTransparency = 0
-    out.BorderSizePixel = 0
-    out.ZIndex = math.max(0, (target.ZIndex or 1) - 1)
-    out.Parent = screenGui
+local function outline(target)
+    local outline = Instance.new("Frame")
+    outline.BackgroundTransparency = 0
+    outline.BorderSizePixel = 0
+    outline.ZIndex = math.max(0, (target.ZIndex or 1) - 1)
+    outline.Parent = screenGui
     local outCorner = Instance.new("UICorner")
     outCorner.CornerRadius = UDim.new(0, 14)
-    outCorner.Parent = out
+    outCorner.Parent = outline
     local grad = Instance.new("UIGradient")
     grad.Color = ColorSequence.new{
         ColorSequenceKeypoint.new(0, Color3.fromRGB(0,0,0)),
@@ -285,9 +285,9 @@ local function createMovingOutline(target)
         ColorSequenceKeypoint.new(1, Color3.fromRGB(0,0,0))
     }
     grad.Rotation = 0
-    grad.Parent = out
+    grad.Parent = outline
     task.spawn(function()
-        while out.Parent and target.Parent do
+        while outline.Parent and target.Parent do
             for i = 0, 360, 2 do
                 grad.Rotation = i
                 task.wait(0.02)
@@ -297,71 +297,71 @@ local function createMovingOutline(target)
     end)
     RunService.RenderStepped:Connect(function()
         if not target.Parent then
-            out:Destroy()
+            outline:Destroy()
             return
         end
         local absPos = target.AbsolutePosition
         local absSize = target.AbsoluteSize
-        out.Position = UDim2.new(0, absPos.X - 3, 0, absPos.Y - 3)
-        out.Size = UDim2.new(0, absSize.X + 6, 0, absSize.Y + 6)
+        outline.Position = UDim2.new(0, absPos.X - 3, 0, absPos.Y - 3)
+        outline.Size = UDim2.new(0, absSize.X + 6, 0, absSize.Y + 6)
     end)
-    return out
+    return outline
 end
 
-local outline1 = createMovingOutline(Frame)
-local outline2 = createMovingOutline(hubFrame)
+local outline1 = outline(Frame)
+local outline2 = outline(hub)
 
-local scrollFrame = Instance.new("ScrollingFrame")
-scrollFrame.Size = UDim2.new(1, -10, 1, -10)
-scrollFrame.Position = UDim2.new(0, 5, 0, 5)
-scrollFrame.BackgroundTransparency = 1
-scrollFrame.BorderSizePixel = 0
-scrollFrame.ScrollBarThickness = 6
-scrollFrame.CanvasSize = UDim2.new(0, 0, 8, 0)
-scrollFrame.Parent = hubFrame
+local scrolling = Instance.new("ScrollingFrame")
+scrolling.Size = UDim2.new(1, -10, 1, -10)
+scrolling.Position = UDim2.new(0, 5, 0, 5)
+scrolling.BackgroundTransparency = 1
+scrolling.BorderSizePixel = 0
+scrolling.ScrollBarThickness = 6
+scrolling.CanvasSize = UDim2.new(0, 0, 8, 0)
+scrolling.Parent = hub
 
-local targetLabel = Instance.new("TextLabel")
-targetLabel.Text = "All, Player name, me"
-targetLabel.Size = UDim2.new(1, -10, 0, 20)
-targetLabel.Position = UDim2.new(0, 5, 0, 1620)
-targetLabel.BackgroundTransparency = 1
-targetLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-targetLabel.TextSize = 14
-targetLabel.Font = Enum.Font.Fantasy
-targetLabel.TextXAlignment = Enum.TextXAlignment.Left
-targetLabel.Parent = scrollFrame
+local targethint = Instance.new("TextLabel")
+targethint.Text = "All, Player name, me"
+targethint.Size = UDim2.new(1, -10, 0, 20)
+targethint.Position = UDim2.new(0, 5, 0, 1620)
+targethint.BackgroundTransparency = 1
+targethint.TextColor3 = Color3.fromRGB(255, 255, 255)
+targethint.TextSize = 14
+targethint.Font = Enum.Font.Fantasy
+targethint.TextXAlignment = Enum.TextXAlignment.Left
+targethint.Parent = scrolling
 
-local targetBox = Instance.new("TextBox")
-targetBox.Size = UDim2.new(1, -10, 0, 30)
-targetBox.Position = UDim2.new(0, 5, 0, 1645)
-targetBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-targetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-targetBox.ClearTextOnFocus = false
-targetBox.PlaceholderText = "all, player name, or me"
-targetBox.Text = "me"
-targetBox.Font = Enum.Font.Code
-targetBox.TextSize = 16
-targetBox.Parent = scrollFrame
+local target = Instance.new("TextBox")
+target.Size = UDim2.new(1, -10, 0, 30)
+target.Position = UDim2.new(0, 5, 0, 1645)
+target.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+target.TextColor3 = Color3.fromRGB(255, 255, 255)
+target.ClearTextOnFocus = false
+target.PlaceholderText = "all, player name, or me"
+target.Text = "me"
+target.Font = Enum.Font.Code
+target.TextSize = 16
+target.Parent = scrolling
 local targetCorner = Instance.new("UICorner")
 targetCorner.CornerRadius = UDim.new(0, 8)
-targetCorner.Parent = targetBox
+targetCorner.Parent = target
 
-local hubExecute = Instance.new("TextButton")
-hubExecute.Size = UDim2.new(1, -10, 0, 40)
-hubExecute.Position = UDim2.new(0, 5, 0, 1685)
-hubExecute.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-hubExecute.Text = "Execute"
-hubExecute.Font = Enum.Font.Fantasy
-hubExecute.TextSize = 18
-hubExecute.TextColor3 = Color3.fromRGB(255, 255, 255)
-hubExecute.Parent = scrollFrame
+local exectarget = Instance.new("TextButton")
+exectarget.Size = UDim2.new(1, -10, 0, 40)
+exectarget.Position = UDim2.new(0, 5, 0, 1685)
+exectarget.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+exectarget.Text = "Execute"
+exectarget.Font = Enum.Font.Fantasy
+exectarget.TextSize = 18
+exectarget.TextColor3 = Color3.fromRGB(255, 255, 255)
+exectarget.Parent = scrolling
 local hubExecCorner = Instance.new("UICorner")
 hubExecCorner.CornerRadius = UDim.new(0, 8)
-hubExecCorner.Parent = hubExecute
+hubExecCorner.Parent = exectarget
 
-local function sendToTarget(code)
-    local target = targetBox.Text:lower()
-    if target == "all" or target == "" then
+local function send(code)
+    local targetText = target.Text:lower()
+    if targetText == "all" or targetText == "" then
         for _, player in pairs(Players:GetPlayers()) do
             local modifiedCode = string.gsub(code, '"[^"]*"', function(match)
                 if string.find(match, LocalPlayer.Name) then
@@ -369,12 +369,12 @@ local function sendToTarget(code)
                 end
                 return match
             end)
-            sendCode(modifiedCode)
+            sender(modifiedCode)
         end
-    elseif target == "me" then
-        sendCode(code)
+    elseif targetText == "me" then
+        sender(code)
     else
-        local player = getPlayerFromName(target)
+        local player = getplr(targetText)
         if player then
             local modifiedCode = string.gsub(code, '"[^"]*"', function(match)
                 if string.find(match, LocalPlayer.Name) then
@@ -382,139 +382,139 @@ local function sendToTarget(code)
                 end
                 return match
             end)
-            sendCode(modifiedCode)
+            sender(modifiedCode)
         else
-            sendCode(code)
+            sender(code)
         end
     end
 end
 
-local currentCode = ""
-local function makeButton(name, yPos, code)
- local btn = Instance.new("TextButton")
- btn.Size = UDim2.new(1, -10, 0, 40)
- btn.Position = UDim2.new(0, 5, 0, yPos)
- btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
- btn.Text = name
- btn.Font = Enum.Font.Fantasy
- btn.TextSize = 16
- btn.TextColor3 = Color3.fromRGB(255, 255, 255)
- btn.Parent = scrollFrame
- local btnCorner = Instance.new("UICorner")
- btnCorner.CornerRadius = UDim.new(0, 6)
- btnCorner.Parent = btn
- btn.MouseButton1Click:Connect(function()
+local current = ""
+local function buttonscriptmaker(name, yPos, code)
+ local script = Instance.new("TextButton")
+ script.Size = UDim2.new(1, -10, 0, 40)
+ script.Position = UDim2.new(0, 5, 0, yPos)
+ script.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ script.Text = name
+ script.Font = Enum.Font.Fantasy
+ script.TextSize = 16
+ script.TextColor3 = Color3.fromRGB(255, 255, 255)
+ script.Parent = scrolling
+ local corderbutt = Instance.new("UICorner")
+ corderbutt.CornerRadius = UDim.new(0, 6)
+ corderbutt.Parent = script
+ script.MouseButton1Click:Connect(function()
   if injected then
-   currentCode = code
-   sendToTarget(code)
+   current = code
+   send(code)
   end
  end)
 end
 
 local y = 5
-makeButton("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
+buttonscriptmaker("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Polaria", y, 'require(75929794015232):Pload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Polaria", y, 'require(75929794015232):Pload("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Server Admin", y, 'require(4665394711).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Server Admin", y, 'require(4665394711).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Nekotina", y, 'require(125615873892926)("'..LocalPlayer.Name..'","NekoV2")')
+buttonscriptmaker("Nekotina", y, 'require(125615873892926)("'..LocalPlayer.Name..'","NekoV2")')
 y = y + 45
-makeButton("Lua Hammer", y, 'require(100389110145660).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Lua Hammer", y, 'require(100389110145660).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
+buttonscriptmaker("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
 y = y + 45
-makeButton("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.Name..'")')
+buttonscriptmaker("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("ExSer", y, 'require(102321495237505):pls("'..LocalPlayer.Name..'")')
+buttonscriptmaker("ExSer", y, 'require(102321495237505):pls("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Dex ServerSided", y, 'require(14572394952)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Dex ServerSided", y, 'require(14572394952)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Happy Hub SS", y, 'require(111482740932254):Hload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Happy Hub SS", y, 'require(111482740932254):Hload("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
+buttonscriptmaker("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
 y = y + 45
-makeButton("Anti Ban", y, 'require(88808180999972)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Anti Ban", y, 'require(88808180999972)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("AntiSkid V14", y, 'require(16534611190).AntiSkid()')
+buttonscriptmaker("AntiSkid V14", y, 'require(16534611190).AntiSkid()')
 y = y + 45
-makeButton("Sensation Hub", y, 'require(100263845596551)("'..LocalPlayer.Name..'", ColorSequence.new(Color3.fromRGB(71, 148, 253), Color3.fromRGB(71, 253, 160)), "Standard")')
+buttonscriptmaker("Sensation Hub", y, 'require(100263845596551)("'..LocalPlayer.Name..'", ColorSequence.new(Color3.fromRGB(71, 148, 253), Color3.fromRGB(71, 253, 160)), "Standard")')
 y = y + 45
-makeButton("Omg c00lkidd from forsaken", y, 'require(89709417365094).Forsaken("'..LocalPlayer.Name..'", "c00lkidd")')
+buttonscriptmaker("Omg c00lkidd from forsaken", y, 'require(89709417365094).Forsaken("'..LocalPlayer.Name..'", "c00lkidd")')
 y = y + 45
-makeButton("FLOWER.", y, 'require(80240554708712).Forsaken("'..LocalPlayer.Name..'", "פרחים")')
+buttonscriptmaker("FLOWER.", y, 'require(80240554708712).Forsaken("'..LocalPlayer.Name..'", "פרחים")')
 y = y + 45
-makeButton("Flamethrower (item)", y, 'require(4666114735).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Flamethrower (item)", y, 'require(4666114735).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Krystal Dance V2", y, 'require(8485456006).kdancev2("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Krystal Dance V2", y, 'require(8485456006).kdancev2("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Guest 1337 forsaken", y, 'require(81657562726106).Guest1337("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Guest 1337 forsaken", y, 'require(81657562726106).Guest1337("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Grab knife v4", y, 'require(92380739586493)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Grab knife v4", y, 'require(92380739586493)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("MLG Gun", y, 'require(2850994438).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("MLG Gun", y, 'require(2850994438).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Artic | Pload Remake", y, 'require(100862513257291):Fire("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Artic | Pload Remake", y, 'require(100862513257291):Fire("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("HD Admin Ranker", y, 'require(7192763922).load("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Serverside.fun", y, 'require(132592022786319).SFV3PC("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Serverside.fun", y, 'require(132592022786319).SFV3PC("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Name..'", "sorcerer")')
+buttonscriptmaker("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Name..'", "sorcerer")')
 y = y + 45
-makeButton("Sukuna Momichi", y, 'require(89529616632600)("'..LocalPlayer.Name..'", "Sukuna")')
+buttonscriptmaker("Sukuna Momichi", y, 'require(89529616632600)("'..LocalPlayer.Name..'", "Sukuna")')
 y = y + 45
-makeButton("Bipolaroid", y, 'require(88477009909590):Pload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Bipolaroid", y, 'require(88477009909590):Pload("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Chat Hack", y, 'require(79249949309162)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Chat Hack", y, 'require(79249949309162)("'..LocalPlayer.Name..'")')
 y = y + 45
-makeButton("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
+buttonscriptmaker("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
 y = y + 45
-makeButton("Compact Hub", y, 'require(15502618907)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Compact Hub", y, 'require(15502618907)("'..LocalPlayer.Name..'")')
 y = y + 45
 
-hubExecute.MouseButton1Click:Connect(function()
- if injected and currentCode ~= "" then
-  sendToTarget(currentCode)
+exectarget.MouseButton1Click:Connect(function()
+ if injected and current ~= "" then
+  send(current)
  end
 end)
 
 --I love this part
 execute.MouseButton1Click:Connect(function()
- local scriptText = textBox.Text
+ local scriptText = TextBox.Text
  if injected and scriptText ~= "" then
-  sendToTarget(scriptText)
+  send(scriptText)
  end
 end)
 
 clear.MouseButton1Click:Connect(function()
- textBox.Text = ""
+ TextBox.Text = ""
 end)
 
 inject.MouseButton1Click:Connect(function()
  if not injected then
-  foundRemote = scanForBackdoors()
-  if foundRemote then
+  remotefounded = scan()
+  if remotefounded then
    injected = true
    inject.Text = "Injected"
-   sendCode('local h = Instance.new("Hint"); h.Text = "Executor made by CurseDew! We hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
+   sender('local h = Instance.new("Hint"); h.Text = "Executor made by CurseDew! We hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
   end
  end
 end)
 
 r6.MouseButton1Click:Connect(function()
  if injected then
-  sendToTarget('require(9635947635).load("'..LocalPlayer.Name..'")')
+  send('require(9635947635).load("'..LocalPlayer.Name..'")')
  end
 end)
 
@@ -542,32 +542,32 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
  if input == dragInput and dragging then
   local delta = input.Position - dragStart
   Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-  alignHub()
+  align()
  end
 end)
 
 local shit = false
-local toggleButton = Instance.new("ImageButton")
-toggleButton.Size = UDim2.new(0, 50, 0, 50)
-toggleButton.Position = UDim2.new(1, -60, 0, 10)
-toggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-toggleButton.Image = "http://www.roblox.com/asset/?id=73667899210726"
-toggleButton.Parent = screenGui
+local outfromass = Instance.new("ImageButton")
+outfromass.Size = UDim2.new(0, 50, 0, 50)
+outfromass.Position = UDim2.new(1, -60, 0, 10)
+outfromass.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+outfromass.Image = "http://www.roblox.com/asset/?id=73667899210726"
+outfromass.Parent = screenGui
 local toggleCorner = Instance.new("UICorner")
 toggleCorner.CornerRadius = UDim.new(0, 12)
-toggleCorner.Parent = toggleButton
+toggleCorner.Parent = outfromass
 
-local toggleOutline = createMovingOutline(toggleButton)
+local toggleOutline = outline(outfromass)
 toggleOutline.Visible = true
 
-toggleButton.MouseButton1Click:Connect(function()
+outfromass.MouseButton1Click:Connect(function()
  shit = not shit
  Frame.Visible = not shit
- hubFrame.Visible = not shit
+ hub.Visible = not shit
  outline1.Visible = not shit
  outline2.Visible = not shit
  if not shit then
-  alignHub()
+  align()
  end
 end)
 
@@ -581,16 +581,16 @@ notification.BorderSizePixel = 2
 notification.BorderColor3 = Color3.fromRGB(255, 255, 255)
 notification.Parent = screenGui
 
-local notifCorner = Instance.new("UICorner")
-notifCorner.CornerRadius = UDim.new(0, 12)
-notifCorner.Parent = notification
+local notifcorn = Instance.new("UICorner")
+notifcorn.CornerRadius = UDim.new(0, 12)
+notifcorn.Parent = notification
 
-local notifGradient = Instance.new("UIGradient")
-notifGradient.Color = ColorSequence.new{
+local gradientify = Instance.new("UIGradient")
+gradientify.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(30, 30, 30))
 }
-notifGradient.Parent = notification
+gradientify.Parent = notification
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(0.7, 0, 0, 35)
@@ -609,7 +609,7 @@ desc.Position = UDim2.new(0, 15, 0, 45)
 desc.BackgroundTransparency = 1
 desc.Text = "Thank you for using my serverside!!!"
 desc.TextColor3 = Color3.fromRGB(200, 200, 200)
-desc.TextSize = 14
+desc.TextSize = 16
 desc.Font = Enum.Font.Gotham
 desc.TextXAlignment = Enum.TextXAlignment.Left
 desc.Parent = notification
@@ -621,13 +621,13 @@ emoji.BackgroundTransparency = 1
 emoji.Image = "rbxassetid://73481929017552"
 emoji.Parent = notification
 
-local slideIn = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
-slideIn:Play()
+local in = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
+in:Play()
 
 task.wait(5)
 
-local slideOut = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0.1, 0)})
-slideOut:Play()
+local out = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0.1, 0)})
+out:Play()
 
 task.wait(0.7)
 notification:Destroy()
@@ -639,7 +639,6 @@ warn("Testing warn")
 --Found = can skid
 --My Dizcord: teamdbq
 --Featuring Feima, Curse, Yaazkid. (Ices and Kenzie having fun on the park dw)
-
 
 --Credits 2!!!
 
