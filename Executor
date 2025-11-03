@@ -625,13 +625,13 @@ emoji.BackgroundTransparency = 1
 emoji.Image = "rbxassetid://73481929017552"
 emoji.Parent = notification
 
-local _in = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
-in:Play()
+local tweenin = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
+tweenIn:Play()
 
 task.wait(5)
 
-local _out = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0.1, 0)})
-out:Play()
+local tweenout = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 10, 0.1, 0)})
+tweenout:Play()
 
 task.wait(0.7)
 notification:Destroy()
