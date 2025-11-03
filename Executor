@@ -323,7 +323,7 @@ scrolling.Parent = hub
 local targethint = Instance.new("TextLabel")
 targethint.Text = "All, Player name, me"
 targethint.Size = UDim2.new(1, -10, 0, 20)
-targethint.Position = UDim2.new(0, 5, 0, 1620)
+targethint.Position = UDim2.new(0, 5, 0, 1720)
 targethint.BackgroundTransparency = 1
 targethint.TextColor3 = Color3.fromRGB(255, 255, 255)
 targethint.TextSize = 14
@@ -333,7 +333,7 @@ targethint.Parent = scrolling
 
 local target = Instance.new("TextBox")
 target.Size = UDim2.new(1, -10, 0, 30)
-target.Position = UDim2.new(0, 5, 0, 1645)
+target.Position = UDim2.new(0, 5, 0, 1745)
 target.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 target.TextColor3 = Color3.fromRGB(255, 255, 255)
 target.ClearTextOnFocus = false
@@ -348,7 +348,7 @@ targetCorner.Parent = target
 
 local exectarget = Instance.new("TextButton")
 exectarget.Size = UDim2.new(1, -10, 0, 40)
-exectarget.Position = UDim2.new(0, 5, 0, 1685)
+exectarget.Position = UDim2.new(0, 5, 0, 1785)
 exectarget.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 exectarget.Text = "Execute"
 exectarget.Font = Enum.Font.Fantasy
@@ -626,7 +626,7 @@ emoji.Image = "rbxassetid://73481929017552"
 emoji.Parent = notification
 
 local tweenin = TweenService:Create(notification, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = UDim2.new(1, -410, 0.1, 0)})
-tweenIn:Play()
+tweenin:Play()
 
 task.wait(5)
 
