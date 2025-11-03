@@ -1,5 +1,5 @@
 --I renamed everything cuz ppl keep calling ts chatgpt when chatgpt renamed everything so ok
---New injection takes 6 days to finish (that was made by Feima(
+--New injection takes 6 days to finish (that was made by Feima)
 --Made by Yaazkidd (Or CurseDew)
 
 print("Parliament haxcked")
@@ -427,6 +427,10 @@ y = y + 45
 buttonscriptmaker("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
 y = y + 45
 buttonscriptmaker("k00pkidd Gui v11", y, 'require(14829670677).EDITL0L("'..LocalPlayer.Name..'")')
+y = y + 45
+buttonscriptmaker("Mango 67", y, 'require(122775270569362)("'..LocalPlayer.Name..'")')
+y = y + 45
+buttonscriptmaker("Mafioso", y, 'require(89847131483512).Forsaken("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
 y = y + 45
