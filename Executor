@@ -414,7 +414,7 @@ end
 local y = 5
 buttonscriptmaker("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("Polaria", y, 'require(75929794015232):Pload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Polaria", y, 'require(114266539914114).polaria("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name..'")')
 y = y + 45
