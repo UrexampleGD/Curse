@@ -257,11 +257,25 @@ hubGrad.Color = gradient.Color
 hubGrad.Rotation = 180
 hubGrad.Parent = hub
 
+local hintFrame = Instance.new("Frame")
+hintFrame.Size = UDim2.new(0, 160, 0, 260)
+hintFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+hintFrame.BorderSizePixel = 0
+hintFrame.Parent = screenGui
+local hintcr = Instance.new("UICorner")
+hintcr.CornerRadius = UDim.new(0, 12)
+hintcr.Parent = hintFrame
+local hintGrad = Instance.new("UIGradient")
+hintGrad.Color = gradient.Color
+hintGrad.Rotation = 90
+hintGrad.Parent = hintFrame
+
 --ChatGPT did this cuz when closed and opened again, the hub frame is close to the executor lol
 local function align()
     if Frame and hub and Frame.Parent then
         pcall(function()
             hub.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.AbsoluteSize.X + 10, 0, Frame.AbsolutePosition.Y)
+            hintFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X - hintFrame.AbsoluteSize.X - 10, 0, Frame.AbsolutePosition.Y)
         end)
     end
 end
@@ -310,6 +324,7 @@ end
 
 local outline1 = outline(Frame)
 local outline2 = outline(hub)
+local outline3 = outline(hintFrame)
 
 local scrolling = Instance.new("ScrollingFrame")
 scrolling.Size = UDim2.new(1, -10, 1, -10)
@@ -319,6 +334,108 @@ scrolling.BorderSizePixel = 0
 scrolling.ScrollBarThickness = 6
 scrolling.CanvasSize = UDim2.new(0, 0, 8, 0)
 scrolling.Parent = hub
+
+local hintScrolling = Instance.new("ScrollingFrame")
+hintScrolling.Size = UDim2.new(1, -10, 1, -10)
+hintScrolling.Position = UDim2.new(0, 5, 0, 5)
+hintScrolling.BackgroundTransparency = 1
+hintScrolling.BorderSizePixel = 0
+hintScrolling.ScrollBarThickness = 6
+hintScrolling.CanvasSize = UDim2.new(0, 0, 0, 200)
+hintScrolling.Parent = hintFrame
+
+local hintTitle = Instance.new("TextLabel")
+hintTitle.Text = "Hint/Message"
+hintTitle.Size = UDim2.new(1, 0, 0, 30)
+hintTitle.BackgroundTransparency = 1
+hintTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+hintTitle.TextSize = 18
+hintTitle.Font = Enum.Font.Fantasy
+hintTitle.Parent = hintScrolling
+
+local hintTextBox = Instance.new("TextBox")
+hintTextBox.Size = UDim2.new(1, 0, 0, 80)
+hintTextBox.Position = UDim2.new(0, 0, 0, 35)
+hintTextBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+hintTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+hintTextBox.ClearTextOnFocus = false
+hintTextBox.MultiLine = true
+hintTextBox.TextWrapped = true
+hintTextBox.PlaceholderText = "Type your hint text here..."
+hintTextBox.Text = ""
+hintTextBox.Font = Enum.Font.Code
+hintTextBox.TextSize = 14
+hintTextBox.TextXAlignment = Enum.TextXAlignment.Left
+hintTextBox.TextYAlignment = Enum.TextYAlignment.Top
+hintTextBox.Parent = hintScrolling
+local hintTextCorner = Instance.new("UICorner")
+hintTextCorner.CornerRadius = UDim.new(0, 8)
+hintTextCorner.Parent = hintTextBox
+
+local hintButton = Instance.new("TextButton")
+hintButton.Size = UDim2.new(1, 0, 0, 40)
+hintButton.Position = UDim2.new(0, 0, 0, 125)
+hintButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+hintButton.Text = "Show Hint"
+hintButton.Font = Enum.Font.Fantasy
+hintButton.TextSize = 16
+hintButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+hintButton.Parent = hintScrolling
+local hintButtonCorner = Instance.new("UICorner")
+hintButtonCorner.CornerRadius = UDim.new(0, 8)
+hintButtonCorner.Parent = hintButton
+
+local messageTextBox = Instance.new("TextBox")
+messageTextBox.Size = UDim2.new(1, 0, 0, 80)
+messageTextBox.Position = UDim2.new(0, 0, 0, 175)
+messageTextBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+messageTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+messageTextBox.ClearTextOnFocus = false
+messageTextBox.MultiLine = true
+messageTextBox.TextWrapped = true
+messageTextBox.PlaceholderText = "Type your message text here..."
+messageTextBox.Text = ""
+messageTextBox.Font = Enum.Font.Code
+messageTextBox.TextSize = 14
+messageTextBox.TextXAlignment = Enum.TextXAlignment.Left
+messageTextBox.TextYAlignment = Enum.TextYAlignment.Top
+messageTextBox.Parent = hintScrolling
+local messageTextCorner = Instance.new("UICorner")
+messageTextCorner.CornerRadius = UDim.new(0, 8)
+messageTextCorner.Parent = messageTextBox
+
+local messageButton = Instance.new("TextButton")
+messageButton.Size = UDim2.new(1, 0, 0, 40)
+messageButton.Position = UDim2.new(0, 0, 0, 265)
+messageButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+messageButton.Text = "Show Message"
+messageButton.Font = Enum.Font.Fantasy
+messageButton.TextSize = 16
+messageButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+messageButton.Parent = hintScrolling
+local messageButtonCorner = Instance.new("UICorner")
+messageButtonCorner.CornerRadius = UDim.new(0, 8)
+messageButtonCorner.Parent = messageButton
+
+hintScrolling.CanvasSize = UDim2.new(0, 0, 0, 315)
+
+hintButton.MouseButton1Click:Connect(function()
+    if injected then
+        local hintText = hintTextBox.Text
+        if hintText ~= "" then
+            sender('local h = Instance.new("Hint"); h.Text = "'..hintText..'"; h.Parent = workspace; task.wait(5); h:Destroy()')
+        end
+    end
+end)
+
+messageButton.MouseButton1Click:Connect(function()
+    if injected then
+        local messageText = messageTextBox.Text
+        if messageText ~= "" then
+            sender('local m = Instance.new("Message"); m.Text = "'..messageText..'"; m.Parent = workspace; task.wait(5); m:Destroy()')
+        end
+    end
+end)
 
 local targethint = Instance.new("TextLabel")
 targethint.Text = "All, Player name, me"
@@ -568,8 +685,10 @@ outfromass.MouseButton1Click:Connect(function()
  shit = not shit
  Frame.Visible = not shit
  hub.Visible = not shit
+ hintFrame.Visible = not shit
  outline1.Visible = not shit
  outline2.Visible = not shit
+ outline3.Visible = not shit
  if not shit then
   align()
  end
@@ -640,16 +759,14 @@ print("CurseDew Executor Initialized.")
 warn("Testing warn")
 
 --Made By Yaazkidd
---Found = can skid
 --My Dizcord: teamdbq
---Featuring Feima, Curse, Yaazkid. (Ices and Kenzie having fun on the park dw)
+--Featuring Feima, Curse, Yaazkidd. (Ices and Kenzie having fun on the park dw)
 
 --Credits 2!!!
 
 --Feima made the injection code that took 3 days to finish because it works when skid still using kidd guis
 --Kenzie made the target code
 --Ices did the moving outline.
+--Shout out to Herlow for making the hint/message!
 
 print("Thanks!")
-
---Notes: Dude Feima what knowledge u have ;crying;
