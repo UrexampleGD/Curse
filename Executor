@@ -513,6 +513,7 @@ local function buttonscriptmaker(name, yPos, code)
  script.Position = UDim2.new(0, 5, 0, yPos)
  script.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
  script.Text = name
+ script.TextWrapped = true
  script.Font = Enum.Font.Fantasy
  script.TextSize = 16
  script.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -531,7 +532,7 @@ end
 local y = 5
 buttonscriptmaker("CurseDew Gui", y, 'require(129187209681562).loading("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("CurseDew Gui V5", y, 'require(110881523671786).loaded("'..LocalPlayer.Name..'")')
+buttonscriptmaker("YOU ARE AN IDIOT [use the target and not u], y, 'require(8222129769).youareanidiot("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Polaria", y, 'require(114266539914114).polaria("'..LocalPlayer.Name..'")')
 y = y + 45
