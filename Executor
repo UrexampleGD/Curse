@@ -16,9 +16,21 @@ local LocalPlayer = Players.LocalPlayer
 local remotefounded = nil
 local injected = false
 
---Feima here, so um I did update this part and added some comment because memory ok
+--Feima here AGAIN, first of all fool of u Yaazkidd and second of all, here is the updated script but i copied lalol function lol
+local alphabet={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}
+
+local function generateName(length)
+    local text=''
+    for i=1,length do
+        text=text..alphabet[math.random(1,#alphabet)]
+    end
+    return text
+end
+
 local function scan()
-    ---scan only remotes in RS and verify execute to create mark
+    local remotes = {}
+    local foundRemote = nil
+    
     for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
         if not (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) then
             continue
@@ -34,64 +46,98 @@ local function scan()
             continue
         end
 
-        --maker name part dont mind this
-        local markerId = "Marker_" .. HttpService:GenerateGUID(false):gsub("-", "")
-        --payload; when executed on the server it will create a BoolValue marker on RS
-        local payload = ([[pcall(function()
+        local code = generateName(math.random(12,30))
+        
+        if obj:IsA("RemoteEvent") then
+            pcall(function() obj:FireServer("a=Instance.new('Model',workspace)a.Name='"..code.."'") end)
+        else
+            spawn(function()
+                pcall(function() obj:InvokeServer("a=Instance.new('Model',workspace)a.Name='"..code.."'") end)
+            end)
+        end
+        remotes[code] = obj
+    end
+    
+    for i=1,50 do
+        for code, remote in pairs(remotes) do
+            if workspace:FindFirstChild(code) then
+                foundRemote = remote
+                pcall(function() workspace[code]:Destroy() end)
+                break
+            end
+        end
+        if foundRemote then break end
+        task.wait(0.1)
+    end
+    
+    if not foundRemote then
+        for _, obj in pairs(ReplicatedStorage:GetDescendants()) do
+            if not (obj:IsA("RemoteEvent") or obj:IsA("RemoteFunction")) then
+                continue
+            end
+
+            if obj.Name == "DefaultChatSystemChatEvents" then
+                continue
+            end
+            if obj.Parent and obj.Parent.Name == "DefaultChatSystemChatEvents" then
+                continue
+            end
+            if string.find(obj:GetFullName(), "RobloxReplicatedStorage") then
+                continue
+            end
+
+            local markerId = "Marker_" .. HttpService:GenerateGUID(false):gsub("-", "")
+            local payload = ([[pcall(function()
     local rs = game:GetService("ReplicatedStorage")
     local w = game:GetService("Workspace")
     local v = Instance.new("BoolValue")
     v.Name = "%s"
     v.Value = true
     v.Parent = rs
-    --putted fallback in workspace if server restricted RS writes
     local v2 = Instance.new("BoolValue")
     v2.Name = "%s"
     v2.Value = true
     v2.Parent = w
 end)]]):format(markerId, markerId)
 
-        --send payload (pcall avoid error)
-        if obj:IsA("RemoteEvent") then
-            pcall(function() obj:FireServer(payload) end)
-        else
-            --RemoteFunction invoke maybe will block, ill put safe pcall right here and avoid halt
-            spawn(function()
-                pcall(function() obj:InvokeServer(payload) end)
-            end)
-        end
+            if obj:IsA("RemoteEvent") then
+                pcall(function() obj:FireServer(payload) end)
+            else
+                spawn(function()
+                    pcall(function() obj:InvokeServer(payload) end)
+                end)
+            end
 
-        --wait a short time for server to execute payload + marker creation
-        local timeout = 0.7
-        local elapsed = 0
-        local found = nil
-        while elapsed < timeout do
-            if ReplicatedStorage:FindFirstChild(markerId) then
-                found = ReplicatedStorage:FindFirstChild(markerId)
+            local timeout = 0.7
+            local elapsed = 0
+            local found = nil
+            while elapsed < timeout do
+                if ReplicatedStorage:FindFirstChild(markerId) then
+                    found = ReplicatedStorage:FindFirstChild(markerId)
+                    break
+                end
+                if Workspace:FindFirstChild(markerId) then
+                    found = Workspace:FindFirstChild(markerId)
+                    break
+                end
+                task.wait(0.1)
+                elapsed = elapsed + 0.1
+            end
+
+            if found then
+                if ReplicatedStorage:FindFirstChild(markerId) then
+                    pcall(function() ReplicatedStorage[markerId]:Destroy() end)
+                end
+                if Workspace:FindFirstChild(markerId) then
+                    pcall(function() Workspace[markerId]:Destroy() end)
+                end
+                foundRemote = obj
                 break
             end
-            if Workspace:FindFirstChild(markerId) then
-                found = Workspace:FindFirstChild(markerId)
-                break
-            end
-            task.wait(0.1)
-            elapsed = elapsed + 0.1
-        end
-
-        if found then
-            --cleanup marker
-            if ReplicatedStorage:FindFirstChild(markerId) then
-                pcall(function() ReplicatedStorage[markerId]:Destroy() end)
-            end
-            if Workspace:FindFirstChild(markerId) then
-                pcall(function() Workspace[markerId]:Destroy() end)
-            end
-            --return the remote that successfully when execute payload
-            return obj
         end
     end
-
-    return nil
+    
+    return foundRemote
 end
 
 --Fake did this part
