@@ -1,7 +1,7 @@
---I renamed everything cuz ppl keep calling ts chatgpt when chatgpt renamed everything so ok
---New injection takes 6 days to finish (that was made by Feima)
---Made by Yaazkidd (Or CurseDew)
---I allow people to copy this to anyone who founded this
+-- [[ I renamed everything cuz ppl keep calling ts chatgpt when chatgpt renamed everything so ok
+-- [[ New injection takes 6 days to finish (that was made by Feima)
+-- [[ Made by Yaazkidd (Or CurseDew)
+
 
 print("Parliament haxcked")
 
@@ -171,11 +171,30 @@ end
 
 --Kenzie thanks!!
 local function getplr(name)
+    if name:lower() == "random" then
+        local players = Players:GetPlayers()
+        if #players > 0 then
+            return players[math.random(1, #players)]
+        end
+        return nil
+    end
+    
     for _, player in pairs(Players:GetPlayers()) do
         if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() then
             return player
         end
     end
+    
+    local matches = {}
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name:lower():sub(1, #name) == name:lower() or player.DisplayName:lower():sub(1, #name) == name:lower() then
+            table.insert(matches, player)
+        end
+    end
+    if #matches == 1 then
+        return matches[1]
+    end
+    
     return nil
 end
 
@@ -485,7 +504,7 @@ messageButton.MouseButton1Click:Connect(function()
 end)
 
 local targethint = Instance.new("TextLabel")
-targethint.Text = "All, Player name, me"
+targethint.Text = "All, Player name, me, random"
 targethint.Size = UDim2.new(1, -10, 0, 20)
 targethint.Position = UDim2.new(0, 5, 0, 1720)
 targethint.BackgroundTransparency = 1
@@ -501,7 +520,7 @@ target.Position = UDim2.new(0, 5, 0, 1745)
 target.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 target.TextColor3 = Color3.fromRGB(255, 255, 255)
 target.ClearTextOnFocus = false
-target.PlaceholderText = "all, player name, or me"
+target.PlaceholderText = "all, random, name, or me"
 target.Text = "me"
 target.Font = Enum.Font.Code
 target.TextSize = 16
@@ -514,7 +533,7 @@ local exectarget = Instance.new("TextButton")
 exectarget.Size = UDim2.new(1, -10, 0, 40)
 exectarget.Position = UDim2.new(0, 5, 0, 1785)
 exectarget.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-exectarget.Text = "Execute"
+exectarget.Text = "Execute Target"
 exectarget.Font = Enum.Font.Fantasy
 exectarget.TextSize = 18
 exectarget.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -537,6 +556,20 @@ local function send(code)
         end
     elseif targetText == "me" then
         sender(code)
+    elseif targetText == "random" then
+        local players = Players:GetPlayers()
+        if #players > 0 then
+            local randomPlayer = players[math.random(1, #players)]
+            local modifiedCode = string.gsub(code, '"[^"]*"', function(match)
+                if string.find(match, LocalPlayer.Name) then
+                    return string.gsub(match, LocalPlayer.Name, randomPlayer.Name)
+                end
+                return match
+            end)
+            sender(modifiedCode)
+        else
+            sender(code)
+        end
     else
         local player = getplr(targetText)
         if player then
@@ -808,15 +841,8 @@ notification:Destroy()
 print("CurseDew Executor Initialized.")
 warn("Testing warn")
 
---Made By Yaazkidd
---My Dizcord: teamdbq
---Featuring Feima, Curse, Yaazkidd. (Ices and Kenzie having fun on the park dw)
-
---Credits 2!!!
-
---Feima made the injection code that took 3 days to finish because it works when skid still using kidd guis
---Kenzie made the target code
---Ices did the moving outline.
---Shout out to Herlow for making the hint/message!
+-- [[ Made By Yaazkidd
+-- [[ My Dizcord: teamdbq
+-- [[ Featuring Feima, Curse, Yaazkidd.
 
 print("Thanks!")
