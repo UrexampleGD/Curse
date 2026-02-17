@@ -2,7 +2,6 @@
 -- [[ New injection takes 6 days to finish (that was made by Feima)
 -- [[ Made by Yaazkidd (Or CurseDew)
 
-
 print("Parliament haxcked")
 
 local Players = game:GetService("Players")
@@ -140,32 +139,16 @@ end)]]):format(markerId, markerId)
     return foundRemote
 end
 
---Fake did this part
-local function prepare(code)
-    if type(code) ~= "string" then
-        code = tostring(code)
-    end
-    local trimmed = code:match("^%s*(.-)%s*$")
-    if trimmed:match("^%s*require%(") or trimmed:match("^%s*loadstring%(") then
-        return code
-    end
-    return 'loadstring([==['..code..']==])()'
-end
-
---Fake did this part
-local function sender(code)
-    code = prepare(code)
+--Fake did this part - SIMPLIFIED: just send raw Lua like scanner does
+local function sendRaw(code)
     if remotefounded and typeof(remotefounded) == "Instance" then
-        local success, errorMsg = pcall(function()
+        pcall(function()
             if remotefounded:IsA("RemoteEvent") then
                 remotefounded:FireServer(code)
             elseif remotefounded:IsA("RemoteFunction") then
                 remotefounded:InvokeServer(code)
             end
         end)
-        return success
-    else
-        return false
     end
 end
 
@@ -485,20 +468,38 @@ messageButtonCorner.Parent = messageButton
 
 hintScrolling.CanvasSize = UDim2.new(0, 0, 0, 315)
 
+-- FIXED: Use raw Lua like scanner, no loadstring, no local, use global 'a'
 hintButton.MouseButton1Click:Connect(function()
-    if injected then
+    if injected and remotefounded then
         local hintText = hintTextBox.Text
         if hintText ~= "" then
-            sender('local h = Instance.new("Hint"); h.Text = "'..hintText..'"; h.Parent = workspace; task.wait(5); h:Destroy()')
+            -- Escape quotes in hintText
+            local safeText = hintText:gsub('"', '\\"')
+            local code = 'a=Instance.new("Hint",workspace)a.Text="'..safeText..'"wait(5)a:Destroy()'
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(code)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(code)
+                end
+            end)
         end
     end
 end)
 
 messageButton.MouseButton1Click:Connect(function()
-    if injected then
+    if injected and remotefounded then
         local messageText = messageTextBox.Text
         if messageText ~= "" then
-            sender('local m = Instance.new("Message"); m.Text = "'..messageText..'"; m.Parent = workspace; task.wait(5); m:Destroy()')
+            local safeText = messageText:gsub('"', '\\"')
+            local code = 'a=Instance.new("Message",workspace)a.Text="'..safeText..'"wait(5)a:Destroy()'
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(code)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(code)
+                end
+            end)
         end
     end
 end)
@@ -542,7 +543,9 @@ local hubExecCorner = Instance.new("UICorner")
 hubExecCorner.CornerRadius = UDim.new(0, 8)
 hubExecCorner.Parent = exectarget
 
+-- FIXED: send raw code, no prepare
 local function send(code)
+    if not injected or not remotefounded then return end
     local targetText = target.Text:lower()
     if targetText == "all" or targetText == "" then
         for _, player in pairs(Players:GetPlayers()) do
@@ -552,10 +555,22 @@ local function send(code)
                 end
                 return match
             end)
-            sender(modifiedCode)
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(modifiedCode)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(modifiedCode)
+                end
+            end)
         end
     elseif targetText == "me" then
-        sender(code)
+        pcall(function()
+            if remotefounded:IsA("RemoteEvent") then
+                remotefounded:FireServer(code)
+            elseif remotefounded:IsA("RemoteFunction") then
+                remotefounded:InvokeServer(code)
+            end
+        end)
     elseif targetText == "random" then
         local players = Players:GetPlayers()
         if #players > 0 then
@@ -566,9 +581,21 @@ local function send(code)
                 end
                 return match
             end)
-            sender(modifiedCode)
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(modifiedCode)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(modifiedCode)
+                end
+            end)
         else
-            sender(code)
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(code)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(code)
+                end
+            end)
         end
     else
         local player = getplr(targetText)
@@ -579,9 +606,21 @@ local function send(code)
                 end
                 return match
             end)
-            sender(modifiedCode)
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(modifiedCode)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(modifiedCode)
+                end
+            end)
         else
-            sender(code)
+            pcall(function()
+                if remotefounded:IsA("RemoteEvent") then
+                    remotefounded:FireServer(code)
+                elseif remotefounded:IsA("RemoteFunction") then
+                    remotefounded:InvokeServer(code)
+                end
+            end)
         end
     end
 end
@@ -705,13 +744,21 @@ clear.MouseButton1Click:Connect(function()
  TextBox.Text = ""
 end)
 
+-- FIXED: Inject hint uses same raw style
 inject.MouseButton1Click:Connect(function()
  if not injected then
   remotefounded = scan()
   if remotefounded then
    injected = true
    inject.Text = "Injected"
-   sender('local h = Instance.new("Hint"); h.Text = "Executor made by CurseDew! We hope you enjoy this executor | Thank you for using."; h.Parent = workspace; task.wait(10); h:Destroy()')
+   local code = 'a=Instance.new("Hint",workspace)a.Text="Executor made by CurseDew! We hope you enjoy this executor | Thank you for using."wait(10)a:Destroy()'
+   pcall(function()
+       if remotefounded:IsA("RemoteEvent") then
+           remotefounded:FireServer(code)
+       elseif remotefounded:IsA("RemoteFunction") then
+           remotefounded:InvokeServer(code)
+       end
+   end)
   end
  end
 end)
