@@ -468,12 +468,12 @@ messageButtonCorner.Parent = messageButton
 
 hintScrolling.CanvasSize = UDim2.new(0, 0, 0, 315)
 
--- FIXED: Use raw Lua like scanner, no loadstring, no local, use global 'a'
+--I used raw Lua so that it can do its job and uh.. yeah. use global 'a'
 hintButton.MouseButton1Click:Connect(function()
     if injected and remotefounded then
         local hintText = hintTextBox.Text
         if hintText ~= "" then
-            -- Escape quotes in hintText
+            -- Escape quotes
             local safeText = hintText:gsub('"', '\\"')
             local code = 'a=Instance.new("Hint",workspace)a.Text="'..safeText..'"wait(5)a:Destroy()'
             pcall(function()
@@ -487,6 +487,7 @@ hintButton.MouseButton1Click:Connect(function()
     end
 end)
 
+-- same
 messageButton.MouseButton1Click:Connect(function()
     if injected and remotefounded then
         local messageText = messageTextBox.Text
@@ -543,7 +544,7 @@ local hubExecCorner = Instance.new("UICorner")
 hubExecCorner.CornerRadius = UDim.new(0, 8)
 hubExecCorner.Parent = exectarget
 
--- FIXED: send raw code, no prepare
+-- send raw code now
 local function send(code)
     if not injected or not remotefounded then return end
     local targetText = target.Text:lower()
@@ -744,7 +745,7 @@ clear.MouseButton1Click:Connect(function()
  TextBox.Text = ""
 end)
 
--- FIXED: Inject hint uses same raw style
+-- samw raw
 inject.MouseButton1Click:Connect(function()
  if not injected then
   remotefounded = scan()
