@@ -139,7 +139,7 @@ end)]]):format(markerId, markerId)
     return foundRemote
 end
 
---Fake did this part - SIMPLIFIED: just send raw Lua like scanner does
+--Fake did this part
 local function sendRaw(code)
     if remotefounded and typeof(remotefounded) == "Instance" then
         pcall(function()
