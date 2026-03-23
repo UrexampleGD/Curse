@@ -319,6 +319,100 @@ hintGrad.Color = gradient.Color
 hintGrad.Rotation = 90
 hintGrad.Parent = hintFrame
 
+-- Sum Cursed Panel (adjusted size and position to fit all elements)
+local sumPanel = Instance.new("Frame")
+sumPanel.Size = UDim2.new(0.5, 0, 0.2, 0)
+sumPanel.AnchorPoint = Vector2.new(0.5, 0)
+sumPanel.Position = UDim2.new(0.5, 0, 0, 50)
+sumPanel.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+sumPanel.BorderSizePixel = 0
+sumPanel.Parent = screenGui
+local sumCorner = Instance.new("UICorner")
+sumCorner.CornerRadius = UDim.new(0, 12)
+sumCorner.Parent = sumPanel
+local sumGrad = Instance.new("UIGradient")
+sumGrad.Color = gradient.Color
+sumGrad.Rotation = 0
+sumGrad.Parent = sumPanel
+
+local sumTitle = Instance.new("TextLabel")
+sumTitle.Text = "Sum Cursed Panel"
+sumTitle.Size = UDim2.new(1, 0, 0, 30)
+sumTitle.BackgroundTransparency = 1
+sumTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+sumTitle.TextScaled = true
+sumTitle.Font = Enum.Font.Fantasy
+sumTitle.Parent = sumPanel
+
+local permB = Instance.new("TextButton")
+permB.Size = UDim2.new(0.3, -10, 0, 28)
+permB.Position = UDim2.new(0.05, 0, 0, 35)
+permB.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+permB.Text = "Perm Ban"
+permB.Font = Enum.Font.Fantasy
+permB.TextSize = 12
+permB.TextColor3 = Color3.fromRGB(255, 255, 255)
+permB.Parent = sumPanel
+local permCorner = Instance.new("UICorner")
+permCorner.CornerRadius = UDim.new(0, 6)
+permCorner.Parent = permB
+
+local banB = Instance.new("TextButton")
+banB.Size = UDim2.new(0.3, -10, 0, 28)
+banB.Position = UDim2.new(0.35, 0, 0, 35)
+banB.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+banB.Text = "Ban"
+banB.Font = Enum.Font.Fantasy
+banB.TextSize = 12
+banB.TextColor3 = Color3.fromRGB(255, 255, 255)
+banB.Parent = sumPanel
+local banCorner = Instance.new("UICorner")
+banCorner.CornerRadius = UDim.new(0, 6)
+banCorner.Parent = banB
+
+local kickB = Instance.new("TextButton")
+kickB.Size = UDim2.new(0.3, -10, 0, 28)
+kickB.Position = UDim2.new(0.65, 0, 0, 35)
+kickB.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+kickB.Text = "Kick"
+kickB.Font = Enum.Font.Fantasy
+kickB.TextSize = 12
+kickB.TextColor3 = Color3.fromRGB(255, 255, 255)
+kickB.Parent = sumPanel
+local kickCorner = Instance.new("UICorner")
+kickCorner.CornerRadius = UDim.new(0, 6)
+kickCorner.Parent = kickB
+
+local namebx = Instance.new("TextBox")
+namebx.Size = UDim2.new(0.9, -20, 0, 28)
+namebx.Position = UDim2.new(0.05, 0, 0, 70)
+namebx.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+namebx.TextColor3 = Color3.fromRGB(255, 255, 255)
+namebx.ClearTextOnFocus = false
+namebx.PlaceholderText = "all, random, me, or name/display"
+namebx.Text = ""
+namebx.Font = Enum.Font.Code
+namebx.TextSize = 12
+namebx.Parent = sumPanel
+local nameCorner = Instance.new("UICorner")
+nameCorner.CornerRadius = UDim.new(0, 6)
+nameCorner.Parent = namebx
+
+local reasonbx = Instance.new("TextBox")
+reasonbx.Size = UDim2.new(0.9, -20, 0, 28)
+reasonbx.Position = UDim2.new(0.05, 0, 0, 105)
+reasonbx.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+reasonbx.TextColor3 = Color3.fromRGB(255, 255, 255)
+reasonbx.ClearTextOnFocus = false
+reasonbx.PlaceholderText = "Reason for '...'"
+reasonbx.Text = ""
+reasonbx.Font = Enum.Font.Code
+reasonbx.TextSize = 12
+reasonbx.Parent = sumPanel
+local reasonCorner = Instance.new("UICorner")
+reasonCorner.CornerRadius = UDim.new(0, 6)
+reasonCorner.Parent = reasonbx
+
 --ChatGPT did this cuz when closed and opened again, the hub frame is close to the executor lol
 local function align()
     if Frame and hub and Frame.Parent then
@@ -374,6 +468,7 @@ end
 local outline1 = outline(Frame)
 local outline2 = outline(hub)
 local outline3 = outline(hintFrame)
+local outlineSum = outline(sumPanel)
 
 local scrolling = Instance.new("ScrollingFrame")
 scrolling.Size = UDim2.new(1, -10, 1, -10)
@@ -473,7 +568,6 @@ hintButton.MouseButton1Click:Connect(function()
     if injected and remotefounded then
         local hintText = hintTextBox.Text
         if hintText ~= "" then
-            -- Escape quotes
             local safeText = hintText:gsub('"', '\\"')
             local code = 'a=Instance.new("Hint",workspace)a.Text="'..safeText..'"wait(5)a:Destroy()'
             pcall(function()
@@ -770,6 +864,196 @@ r6.MouseButton1Click:Connect(function()
  end
 end)
 
+-- I wanna thanks to.. DEMILISHIO!! oh my yay
+local function sendBanAction(actionType)
+    if not injected or not remotefounded then
+        return
+    end
+    local rawTarget = namebx.Text:gsub('"', '\\"')
+    local reason = reasonbx.Text:gsub('"', '\\"')
+    if rawTarget == "" then
+        return
+    end
+
+    -- Special cases: all, random, me
+    local targetLower = rawTarget:lower()
+    if targetLower == "all" then
+        -- Loop all
+        local code = string.format([[
+for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+    local reason = "%s"
+    if %s then
+        p:Kick(reason)
+    end
+end
+]], reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
+        if actionType == "permban" then
+            code = string.format([[
+for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+    local reason = "%s"
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+    if ds then
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
+    end
+    p:SetAttribute("PermBanned", true)
+    p:Kick(reason)
+end
+]], reason)
+        elseif actionType == "ban" then
+            code = string.format([[
+for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+    local reason = "%s"
+    p:SetAttribute("Banned", true)
+    p:Kick(reason)
+end
+]], reason)
+        end
+        sendRaw(code)
+        return
+    end
+
+    if targetLower == "random" then
+        -- random sss pick
+        local code = string.format([[
+local players = game:GetService("Players"):GetPlayers()
+if #players > 0 then
+    local p = players[math.random(1, #players)]
+    local reason = "%s"
+    if %s then
+        p:Kick(reason)
+    end
+end
+]], reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
+        if actionType == "permban" then
+            code = string.format([[
+local players = game:GetService("Players"):GetPlayers()
+if #players > 0 then
+    local p = players[math.random(1, #players)]
+    local reason = "%s"
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+    if ds then
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
+    end
+    p:SetAttribute("PermBanned", true)
+    p:Kick(reason)
+end
+]], reason)
+        elseif actionType == "ban" then
+            code = string.format([[
+local players = game:GetService("Players"):GetPlayers()
+if #players > 0 then
+    local p = players[math.random(1, #players)]
+    local reason = "%s"
+    p:SetAttribute("Banned", true)
+    p:Kick(reason)
+end
+]], reason)
+        end
+        sendRaw(code)
+        return
+    end
+
+    if targetLower == "me" then
+        rawTarget = LocalPlayer.Name
+        -- idk
+    end
+
+    -- normal p or display name
+    local code = string.format([[
+local function getPlayer(input)
+    input = input:lower()
+    local players = game:GetService("Players"):GetPlayers()
+    -- exact match diffrence name
+    for _, p in ipairs(players) do
+        if p.Name:lower() == input or p.DisplayName:lower() == input then
+            return p
+        end
+    end
+    -- partial match (prefix)
+    for _, p in ipairs(players) do
+        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
+            return p
+        end
+    end
+    return nil
+end
+
+local p = getPlayer("%s")
+if p then
+    local reason = "%s"
+    if %s then
+        p:Kick(reason)
+    end
+end
+]], rawTarget, reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
+    if actionType == "permban" then
+        code = string.format([[
+local function getPlayer(input)
+    input = input:lower()
+    local players = game:GetService("Players"):GetPlayers()
+    for _, p in ipairs(players) do
+        if p.Name:lower() == input or p.DisplayName:lower() == input then
+            return p
+        end
+    end
+    for _, p in ipairs(players) do
+        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
+            return p
+        end
+    end
+    return nil
+end
+
+local p = getPlayer("%s")
+if p then
+    local reason = "%s"
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+    if ds then
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
+    end
+    p:SetAttribute("PermBanned", true)
+    p:Kick(reason)
+end
+]], rawTarget, reason)
+    elseif actionType == "ban" then
+        code = string.format([[
+local function getPlayer(input)
+    input = input:lower()
+    local players = game:GetService("Players"):GetPlayers()
+    for _, p in ipairs(players) do
+        if p.Name:lower() == input or p.DisplayName:lower() == input then
+            return p
+        end
+    end
+    for _, p in ipairs(players) do
+        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
+            return p
+        end
+    end
+    return nil
+end
+
+local p = getPlayer("%s")
+if p then
+    local reason = "%s"
+    p:SetAttribute("Banned", true)
+    p:Kick(reason)
+end
+]], rawTarget, reason)
+    end
+    sendRaw(code)
+end
+
+permB.MouseButton1Click:Connect(function()
+    sendBanAction("permban")
+end)
+banB.MouseButton1Click:Connect(function()
+    sendBanAction("ban")
+end)
+kickB.MouseButton1Click:Connect(function()
+    sendBanAction("kick")
+end)
+
 local dragging, dragInput, dragStart, startPos
 Frame.InputBegan:Connect(function(input)
  if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -817,9 +1101,11 @@ outfromass.MouseButton1Click:Connect(function()
  Frame.Visible = not shit
  hub.Visible = not shit
  hintFrame.Visible = not shit
+ sumPanel.Visible = not shit
  outline1.Visible = not shit
  outline2.Visible = not shit
  outline3.Visible = not shit
+ outlineSum.Visible = not shit
  if not shit then
   align()
  end
