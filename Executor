@@ -419,6 +419,13 @@ local function align()
         pcall(function()
             hub.Position = UDim2.new(0, Frame.AbsolutePosition.X + Frame.AbsoluteSize.X + 10, 0, Frame.AbsolutePosition.Y)
             hintFrame.Position = UDim2.new(0, Frame.AbsolutePosition.X - hintFrame.AbsoluteSize.X - 10, 0, Frame.AbsolutePosition.Y)
+            -- Make sumPanel follow the main executor (above, centered)
+            if sumPanel then
+                local centerX = Frame.AbsolutePosition.X + Frame.AbsoluteSize.X / 2
+                local aboveY = Frame.AbsolutePosition.Y - sumPanel.AbsoluteSize.Y - 10
+                -- Anchor is (0.5,0), so we set Position.X to centerX to keep it centered
+                sumPanel.Position = UDim2.new(0, centerX, 0, aboveY)
+            end
         end)
     end
 end
