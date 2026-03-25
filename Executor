@@ -761,7 +761,7 @@ buttonscriptmaker("Gun Giver", y, 'require(4207271766).load("'..LocalPlayer.Name
 y = y + 45
 buttonscriptmaker("Server Admin", y, 'require(4665394711).load("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("Nekotina", y, 'require(125615873892926)("'..LocalPlayer.Name..'","NekoV2")')
+buttonscriptmaker("Cosmetic Char", y, 'require(130423051611841).strmn("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Lua Hammer", y, 'require(100389110145660).load("'..LocalPlayer.Name..'")')
 y = y + 45
@@ -781,7 +781,7 @@ buttonscriptmaker("Infinite Yield SS", y, 'require(7634392335)("'..LocalPlayer.N
 y = y + 45
 buttonscriptmaker("Dex ServerSided", y, 'require(14572394952)("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("Happy Hub SS", y, 'require(111482740932254):Hload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Happy Hub SS", y, 'require(109229360070706):Hload("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("KJ", y, 'require(89529616632600)("'..LocalPlayer.Name..'","KJ")')
 y = y + 45
@@ -803,9 +803,9 @@ buttonscriptmaker("Guest 1337 forsaken", y, 'require(81657562726106).Guest1337("
 y = y + 45
 buttonscriptmaker("Grab knife v4", y, 'require(92380739586493)("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("MLG Gun", y, 'require(2850994438).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Supachat", y, 'require(91221929522231)')
 y = y + 45
-buttonscriptmaker("SSP", y, 'require(16920033857)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("UNO Table play", y, 'require(13902025530).Give("'..LocalPlayer.Name..'",nil)')
 y = y + 45
 buttonscriptmaker("Neko Yourself", y, 'require(3626787481).neko("'..LocalPlayer.Name..'")')
 y = y + 45
@@ -825,7 +825,7 @@ buttonscriptmaker("Chat Hack", y, 'require(79249949309162)("'..LocalPlayer.Name.
 y = y + 45
 buttonscriptmaker("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
 y = y + 45
-buttonscriptmaker("Compact Hub", y, 'require(15502618907)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Patrick Wraith", y, 'require(12102103065).Patrick("'..LocalPlayer.Name..'")')
 y = y + 45
 
 exectarget.MouseButton1Click:Connect(function()
