@@ -871,182 +871,362 @@ r6.MouseButton1Click:Connect(function()
  end
 end)
 
--- I wanna thanks to.. DEMILISHIO!! oh my yay
+-- Fixed ban/kick/permban functions with proper name matching (full/partial, case-insensitive)
 local function sendBanAction(actionType)
     if not injected or not remotefounded then
         return
     end
-    local rawTarget = namebx.Text:gsub('"', '\\"')
-    local reason = reasonbx.Text:gsub('"', '\\"')
+    local rawTarget = namebx.Text
+    local reason = reasonbx.Text
     if rawTarget == "" then
         return
     end
 
-    -- Special cases: all, random, me
     local targetLower = rawTarget:lower()
+    local escapedReason = string.format("%q", reason)
+
+    -- Special cases
     if targetLower == "all" then
-        -- Loop all
         local code = string.format([[
-for _, p in pairs(game:GetService("Players"):GetPlayers()) do
-    local reason = "%s"
-    if %s then
+local players = game:GetService("Players"):GetPlayers()
+local reason = %s
+for _, p in ipairs(players) do
+    p:Kick(reason)
+end
+]], escapedReason)
+        if actionType == "ban" then
+            code = string.format([[
+if not _G.__CurseDew_Banned then _G.__CurseDew_Banned = {} end
+local players = game:GetService("Players"):GetPlayers()
+local reason = %s
+for _, p in ipairs(players) do
+    _G.__CurseDew_Banned[p.UserId] = reason
+    p:Kick(reason)
+end
+if not _G.__CurseDew_BanListener then
+    _G.__CurseDew_BanListener = true
+    game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+        if _G.__CurseDew_Banned and _G.__CurseDew_Banned[newPlayer.UserId] then
+            newPlayer:Kick(_G.__CurseDew_Banned[newPlayer.UserId])
+        end
+    end)
+end
+]], escapedReason)
+        elseif actionType == "permban" then
+            code = string.format([[
+local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+if ds then
+    local players = game:GetService("Players"):GetPlayers()
+    local reason = %s
+    for _, p in ipairs(players) do
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
         p:Kick(reason)
     end
 end
-]], reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
-        if actionType == "permban" then
-            code = string.format([[
-for _, p in pairs(game:GetService("Players"):GetPlayers()) do
-    local reason = "%s"
-    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+if not _G.__CurseDew_PermBanListener then
+    _G.__CurseDew_PermBanListener = true
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
     if ds then
-        pcall(function() ds:SetAsync(p.UserId, reason) end)
+        game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+            local userId = newPlayer.UserId
+            local banReason = pcall(function() return ds:GetAsync(userId) end)
+            if banReason and banReason ~= "" then
+                newPlayer:Kick(banReason)
+            end
+        end)
     end
-    p:SetAttribute("PermBanned", true)
-    p:Kick(reason)
 end
-]], reason)
-        elseif actionType == "ban" then
-            code = string.format([[
-for _, p in pairs(game:GetService("Players"):GetPlayers()) do
-    local reason = "%s"
-    p:SetAttribute("Banned", true)
-    p:Kick(reason)
-end
-]], reason)
+]], escapedReason)
         end
         sendRaw(code)
         return
     end
 
     if targetLower == "random" then
-        -- random sss pick
         local code = string.format([[
 local players = game:GetService("Players"):GetPlayers()
 if #players > 0 then
     local p = players[math.random(1, #players)]
-    local reason = "%s"
-    if %s then
+    local reason = %s
+    p:Kick(reason)
+end
+]], escapedReason)
+        if actionType == "ban" then
+            code = string.format([[
+if not _G.__CurseDew_Banned then _G.__CurseDew_Banned = {} end
+local players = game:GetService("Players"):GetPlayers()
+if #players > 0 then
+    local p = players[math.random(1, #players)]
+    local reason = %s
+    _G.__CurseDew_Banned[p.UserId] = reason
+    p:Kick(reason)
+end
+if not _G.__CurseDew_BanListener then
+    _G.__CurseDew_BanListener = true
+    game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+        if _G.__CurseDew_Banned and _G.__CurseDew_Banned[newPlayer.UserId] then
+            newPlayer:Kick(_G.__CurseDew_Banned[newPlayer.UserId])
+        end
+    end)
+end
+]], escapedReason)
+        elseif actionType == "permban" then
+            code = string.format([[
+local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+if ds then
+    local players = game:GetService("Players"):GetPlayers()
+    if #players > 0 then
+        local p = players[math.random(1, #players)]
+        local reason = %s
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
         p:Kick(reason)
     end
 end
-]], reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
-        if actionType == "permban" then
-            code = string.format([[
-local players = game:GetService("Players"):GetPlayers()
-if #players > 0 then
-    local p = players[math.random(1, #players)]
-    local reason = "%s"
-    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+if not _G.__CurseDew_PermBanListener then
+    _G.__CurseDew_PermBanListener = true
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
     if ds then
-        pcall(function() ds:SetAsync(p.UserId, reason) end)
+        game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+            local userId = newPlayer.UserId
+            local banReason = pcall(function() return ds:GetAsync(userId) end)
+            if banReason and banReason ~= "" then
+                newPlayer:Kick(banReason)
+            end
+        end)
     end
-    p:SetAttribute("PermBanned", true)
-    p:Kick(reason)
 end
-]], reason)
-        elseif actionType == "ban" then
-            code = string.format([[
-local players = game:GetService("Players"):GetPlayers()
-if #players > 0 then
-    local p = players[math.random(1, #players)]
-    local reason = "%s"
-    p:SetAttribute("Banned", true)
-    p:Kick(reason)
-end
-]], reason)
+]], escapedReason)
         end
         sendRaw(code)
         return
     end
 
     if targetLower == "me" then
-        rawTarget = LocalPlayer.Name
-        -- idk
-    end
-
-    -- normal p or display name
-    local code = string.format([[
-local function getPlayer(input)
-    input = input:lower()
-    local players = game:GetService("Players"):GetPlayers()
-    -- exact match diffrence name
-    for _, p in ipairs(players) do
-        if p.Name:lower() == input or p.DisplayName:lower() == input then
-            return p
+        local code = string.format([[
+local p = game:GetService("Players").LocalPlayer
+local reason = %s
+p:Kick(reason)
+]], escapedReason)
+        if actionType == "ban" then
+            code = string.format([[
+if not _G.__CurseDew_Banned then _G.__CurseDew_Banned = {} end
+local p = game:GetService("Players").LocalPlayer
+local reason = %s
+_G.__CurseDew_Banned[p.UserId] = reason
+p:Kick(reason)
+if not _G.__CurseDew_BanListener then
+    _G.__CurseDew_BanListener = true
+    game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+        if _G.__CurseDew_Banned and _G.__CurseDew_Banned[newPlayer.UserId] then
+            newPlayer:Kick(_G.__CurseDew_Banned[newPlayer.UserId])
         end
-    end
-    -- partial match (prefix)
-    for _, p in ipairs(players) do
-        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
-            return p
-        end
-    end
-    return nil
+    end)
 end
+]], escapedReason)
+        elseif actionType == "permban" then
+            code = string.format([[
+local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+if ds then
+    local p = game:GetService("Players").LocalPlayer
+    local reason = %s
+    pcall(function() ds:SetAsync(p.UserId, reason) end)
+    p:Kick(reason)
+end
+if not _G.__CurseDew_PermBanListener then
+    _G.__CurseDew_PermBanListener = true
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+    if ds then
+        game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+            local userId = newPlayer.UserId
+            local banReason = pcall(function() return ds:GetAsync(userId) end)
+            if banReason and banReason ~= "" then
+                newPlayer:Kick(banReason)
+            end
+        end)
+    end
+end
+]], escapedReason)
+        end
+        sendRaw(code)
+        return
+    end
 
-local p = getPlayer("%s")
+    -- Specific player: try to resolve on client first
+    local player = getplr(rawTarget)
+    if player then
+        -- Exact or unique prefix match found on client, use exact name
+        local playerName = player.Name
+        local escapedPlayerName = string.format("%q", playerName)
+        local code = string.format([[
+local players = game:GetService("Players"):GetPlayers()
+local p = nil
+for _, plr in ipairs(players) do
+    if plr.Name == %s then
+        p = plr
+        break
+    end
+end
 if p then
-    local reason = "%s"
-    if %s then
+    local reason = %s
+    p:Kick(reason)
+end
+]], escapedPlayerName, escapedReason)
+        if actionType == "ban" then
+            code = string.format([[
+if not _G.__CurseDew_Banned then _G.__CurseDew_Banned = {} end
+local players = game:GetService("Players"):GetPlayers()
+local p = nil
+for _, plr in ipairs(players) do
+    if plr.Name == %s then
+        p = plr
+        break
+    end
+end
+if p then
+    local reason = %s
+    _G.__CurseDew_Banned[p.UserId] = reason
+    p:Kick(reason)
+end
+if not _G.__CurseDew_BanListener then
+    _G.__CurseDew_BanListener = true
+    game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+        if _G.__CurseDew_Banned and _G.__CurseDew_Banned[newPlayer.UserId] then
+            newPlayer:Kick(_G.__CurseDew_Banned[newPlayer.UserId])
+        end
+    end)
+end
+]], escapedPlayerName, escapedReason)
+        elseif actionType == "permban" then
+            code = string.format([[
+local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+if ds then
+    local players = game:GetService("Players"):GetPlayers()
+    local p = nil
+    for _, plr in ipairs(players) do
+        if plr.Name == %s then
+            p = plr
+            break
+        end
+    end
+    if p then
+        local reason = %s
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
         p:Kick(reason)
     end
 end
-]], rawTarget, reason, (actionType == "kick" and "true" or "p:SetAttribute('Banned', true) p:Kick(reason)"))
-    if actionType == "permban" then
-        code = string.format([[
-local function getPlayer(input)
-    input = input:lower()
-    local players = game:GetService("Players"):GetPlayers()
-    for _, p in ipairs(players) do
-        if p.Name:lower() == input or p.DisplayName:lower() == input then
-            return p
-        end
-    end
-    for _, p in ipairs(players) do
-        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
-            return p
-        end
-    end
-    return nil
-end
-
-local p = getPlayer("%s")
-if p then
-    local reason = "%s"
-    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("Bans") end)
+if not _G.__CurseDew_PermBanListener then
+    _G.__CurseDew_PermBanListener = true
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
     if ds then
-        pcall(function() ds:SetAsync(p.UserId, reason) end)
+        game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+            local userId = newPlayer.UserId
+            local banReason = pcall(function() return ds:GetAsync(userId) end)
+            if banReason and banReason ~= "" then
+                newPlayer:Kick(banReason)
+            end
+        end)
     end
-    p:SetAttribute("PermBanned", true)
-    p:Kick(reason)
 end
-]], rawTarget, reason)
-    elseif actionType == "ban" then
-        code = string.format([[
-local function getPlayer(input)
-    input = input:lower()
+]], escapedPlayerName, escapedReason)
+        end
+        sendRaw(code)
+        return
+    end
+
+    -- No match on client, send server-side code that does the matching (prefix and exact)
+    local escapedTarget = string.format("%q", rawTarget)
+    local code = string.format([[
+local function findPlayer(input)
     local players = game:GetService("Players"):GetPlayers()
     for _, p in ipairs(players) do
-        if p.Name:lower() == input or p.DisplayName:lower() == input then
+        if p.Name:lower() == input:lower() or p.DisplayName:lower() == input:lower() then
             return p
         end
     end
     for _, p in ipairs(players) do
-        if p.Name:lower():sub(1, #input) == input or p.DisplayName:lower():sub(1, #input) == input then
+        if p.Name:lower():sub(1, #input) == input:lower() or p.DisplayName:lower():sub(1, #input) == input:lower() then
             return p
         end
     end
     return nil
 end
-
-local p = getPlayer("%s")
+local p = findPlayer(%s)
 if p then
-    local reason = "%s"
-    p:SetAttribute("Banned", true)
+    local reason = %s
     p:Kick(reason)
 end
-]], rawTarget, reason)
+]], escapedTarget, escapedReason)
+    if actionType == "ban" then
+        code = string.format([[
+if not _G.__CurseDew_Banned then _G.__CurseDew_Banned = {} end
+local function findPlayer(input)
+    local players = game:GetService("Players"):GetPlayers()
+    for _, p in ipairs(players) do
+        if p.Name:lower() == input:lower() or p.DisplayName:lower() == input:lower() then
+            return p
+        end
+    end
+    for _, p in ipairs(players) do
+        if p.Name:lower():sub(1, #input) == input:lower() or p.DisplayName:lower():sub(1, #input) == input:lower() then
+            return p
+        end
+    end
+    return nil
+end
+local p = findPlayer(%s)
+if p then
+    local reason = %s
+    _G.__CurseDew_Banned[p.UserId] = reason
+    p:Kick(reason)
+end
+if not _G.__CurseDew_BanListener then
+    _G.__CurseDew_BanListener = true
+    game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+        if _G.__CurseDew_Banned and _G.__CurseDew_Banned[newPlayer.UserId] then
+            newPlayer:Kick(_G.__CurseDew_Banned[newPlayer.UserId])
+        end
+    end)
+end
+]], escapedTarget, escapedReason)
+    elseif actionType == "permban" then
+        code = string.format([[
+local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+if ds then
+    local function findPlayer(input)
+        local players = game:GetService("Players"):GetPlayers()
+        for _, p in ipairs(players) do
+            if p.Name:lower() == input:lower() or p.DisplayName:lower() == input:lower() then
+                return p
+            end
+        end
+        for _, p in ipairs(players) do
+            if p.Name:lower():sub(1, #input) == input:lower() or p.DisplayName:lower():sub(1, #input) == input:lower() then
+                return p
+            end
+        end
+        return nil
+    end
+    local p = findPlayer(%s)
+    if p then
+        local reason = %s
+        pcall(function() ds:SetAsync(p.UserId, reason) end)
+        p:Kick(reason)
+    end
+end
+if not _G.__CurseDew_PermBanListener then
+    _G.__CurseDew_PermBanListener = true
+    local ds = pcall(function() return game:GetService("DataStoreService"):GetDataStore("CurseDew_PermBans") end)
+    if ds then
+        game:GetService("Players").PlayerAdded:Connect(function(newPlayer)
+            local userId = newPlayer.UserId
+            local banReason = pcall(function() return ds:GetAsync(userId) end)
+            if banReason and banReason ~= "" then
+                newPlayer:Kick(banReason)
+            end
+        end)
+    end
+end
+]], escapedTarget, escapedReason)
     end
     sendRaw(code)
 end
