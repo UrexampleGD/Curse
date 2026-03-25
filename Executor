@@ -763,7 +763,7 @@ buttonscriptmaker("Server Admin", y, 'require(4665394711).load("'..LocalPlayer.N
 y = y + 45
 buttonscriptmaker("Cosmetic Char", y, 'require(130423051611841).strmn("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("Lua Hammer", y, 'require(100389110145660).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Discord Chat", y, 'require(138742508431838).discord()')
 y = y + 45
 buttonscriptmaker("c00lgui", y, 'require(14125553864):Fire("'..LocalPlayer.Name..'","c00lkidd")')
 y = y + 45
@@ -773,7 +773,7 @@ buttonscriptmaker("Mango 67", y, 'require(122775270569362)("'..LocalPlayer.Name.
 y = y + 45
 buttonscriptmaker("Mafioso", y, 'require(89847131483512).Forsaken("'..LocalPlayer.Name..'")')
 y = y + 45
-buttonscriptmaker("T0PK3K Cake", y, 'require(2609384717).load("'..LocalPlayer.Name..'")')
+buttonscriptmaker("GARFIELD X CANNON", y, 'require(16048066872):Find("'..LocalPlayer.Name..'","Garfield")')
 y = y + 45
 buttonscriptmaker("ExSer", y, 'require(94217198436768):pls("'..LocalPlayer.Name..'")')
 y = y + 45
