@@ -819,9 +819,9 @@ buttonscriptmaker("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Nam
 y = y + 45
 buttonscriptmaker("Sukuna Momichi", y, 'require(89529616632600)("'..LocalPlayer.Name..'", "Sukuna")')
 y = y + 45
-buttonscriptmaker("Bipolaroid", y, 'require(88477009909590):Pload("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Rainbow Engine", y, 'require(110200315761514)._RainbowEngine()')
 y = y + 45
-buttonscriptmaker("Chat Hack", y, 'require(79249949309162)("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Goner", y, 'require(4513235536).G("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
 y = y + 45
