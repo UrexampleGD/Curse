@@ -825,7 +825,7 @@ buttonscriptmaker("Goner", y, 'require(4513235536).G("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Bludude", y, 'require(102814485459828).Forsaken("'..LocalPlayer.Name..'", "Bluudude")')
 y = y + 45
-buttonscriptmaker("Patrick Wraith", y, 'require(12102103065).Patrick("'..LocalPlayer.Name..'")')
+buttonscriptmaker("Patrick Wraith", y, 'require(14310479648):OwO("'..LocalPlayer.Name..'","conny"')
 y = y + 45
 
 exectarget.MouseButton1Click:Connect(function()
