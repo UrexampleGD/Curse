@@ -817,7 +817,7 @@ buttonscriptmaker("Serverside.fun", y, 'require(132592022786319).SFV3PC("'..Loca
 y = y + 45
 buttonscriptmaker("Gojo Manga wow", y, 'require(14499140823)("'..LocalPlayer.Name..'", "sorcerer")')
 y = y + 45
-buttonscriptmaker("Sukuna Momichi", y, 'require(89529616632600)("'..LocalPlayer.Name..'", "Sukuna")')
+buttonscriptmaker("Gojo Updated [PC ONLY]", y, 'require(16689350444).Gojo("'..LocalPlayer.Name..'")')
 y = y + 45
 buttonscriptmaker("Rainbow Engine", y, 'require(110200315761514)._RainbowEngine()')
 y = y + 45
