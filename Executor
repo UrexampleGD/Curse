@@ -319,7 +319,7 @@ hintGrad.Color = gradient.Color
 hintGrad.Rotation = 90
 hintGrad.Parent = hintFrame
 
--- Sum Cursed Panel (adjusted size and position to fit all elements)
+-- Frame
 local sumPanel = Instance.new("Frame")
 sumPanel.Size = UDim2.new(0.5, 0, 0.2, 0)
 sumPanel.AnchorPoint = Vector2.new(0.5, 0)
@@ -432,7 +432,7 @@ end
 
 align()
 
---even tho my brother helped me making this, he is still annoying
+-- even tho my brother helped me making this, he is still annoying
 local function outline(target)
     local outline = Instance.new("Frame")
     outline.BackgroundTransparency = 0
